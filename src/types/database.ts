@@ -17,6 +17,7 @@ export type Database = {
           activo: boolean
           created_at: string
           descripcion: string | null
+          empresa_id: string | null
           id: string
           nombre: string
         }
@@ -24,6 +25,7 @@ export type Database = {
           activo?: boolean
           created_at?: string
           descripcion?: string | null
+          empresa_id?: string | null
           id?: string
           nombre: string
         }
@@ -31,10 +33,19 @@ export type Database = {
           activo?: boolean
           created_at?: string
           descripcion?: string | null
+          empresa_id?: string | null
           id?: string
           nombre?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categorias_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       clientes: {
         Row: {
@@ -46,6 +57,7 @@ export type Database = {
           dia_visita: Database["public"]["Enums"]["dia_semana"] | null
           direccion: string | null
           email: string | null
+          empresa_id: string | null
           id: string
           latitud: number | null
           limite_credito: number | null
@@ -71,6 +83,7 @@ export type Database = {
           dia_visita?: Database["public"]["Enums"]["dia_semana"] | null
           direccion?: string | null
           email?: string | null
+          empresa_id?: string | null
           id?: string
           latitud?: number | null
           limite_credito?: number | null
@@ -96,6 +109,7 @@ export type Database = {
           dia_visita?: Database["public"]["Enums"]["dia_semana"] | null
           direccion?: string | null
           email?: string | null
+          empresa_id?: string | null
           id?: string
           latitud?: number | null
           limite_credito?: number | null
@@ -112,130 +126,117 @@ export type Database = {
           updated_at?: string
           zona_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "clientes_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clientes_lista_precios_id_fkey"
+            columns: ["lista_precios_id"]
+            isOneToOne: false
+            referencedRelation: "listas_precios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clientes_preventista_id_fkey"
+            columns: ["preventista_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clientes_zona_id_fkey"
+            columns: ["zona_id"]
+            isOneToOne: false
+            referencedRelation: "zonas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      depositos: {
+      cobros: {
         Row: {
-          activo: boolean
+          cliente_id: string
           created_at: string
-          direccion: string | null
-          es_principal: boolean
+          empresa_id: string
+          fecha: string
+          forma_pago: string
           id: string
-          nombre: string
-        }
-        Insert: {
-          activo?: boolean
-          created_at?: string
-          direccion?: string | null
-          es_principal?: boolean
-          id?: string
-          nombre: string
-        }
-        Update: {
-          activo?: boolean
-          created_at?: string
-          direccion?: string | null
-          es_principal?: boolean
-          id?: string
-          nombre?: string
-        }
-        Relationships: []
-      }
-      lista_precios_items: {
-        Row: {
-          created_at: string
-          id: string
-          lista_id: string
-          precio: number
-          producto_id: string
+          monto: number
+          observaciones: string | null
+          pedido_id: string | null
+          preventista_id: string
+          rendicion_id: string | null
           updated_at: string
         }
         Insert: {
+          cliente_id: string
           created_at?: string
+          empresa_id: string
+          fecha?: string
+          forma_pago?: string
           id?: string
-          lista_id: string
-          precio: number
-          producto_id: string
+          monto: number
+          observaciones?: string | null
+          pedido_id?: string | null
+          preventista_id: string
+          rendicion_id?: string | null
           updated_at?: string
         }
         Update: {
+          cliente_id?: string
           created_at?: string
+          empresa_id?: string
+          fecha?: string
+          forma_pago?: string
           id?: string
-          lista_id?: string
-          precio?: number
-          producto_id?: string
+          monto?: number
+          observaciones?: string | null
+          pedido_id?: string | null
+          preventista_id?: string
+          rendicion_id?: string | null
           updated_at?: string
         }
-        Relationships: []
-      }
-      listas_precios: {
-        Row: {
-          activo: boolean
-          created_at: string
-          descripcion: string | null
-          es_default: boolean
-          id: string
-          nombre: string
-        }
-        Insert: {
-          activo?: boolean
-          created_at?: string
-          descripcion?: string | null
-          es_default?: boolean
-          id?: string
-          nombre: string
-        }
-        Update: {
-          activo?: boolean
-          created_at?: string
-          descripcion?: string | null
-          es_default?: boolean
-          id?: string
-          nombre?: string
-        }
-        Relationships: []
-      }
-      pedido_detalles: {
-        Row: {
-          cantidad: number
-          created_at: string
-          descuento_porcentaje: number
-          id: string
-          iva_porcentaje: number
-          observaciones: string | null
-          pedido_id: string
-          precio_unitario: number
-          producto_id: string
-          subtotal: number
-          total_linea: number
-        }
-        Insert: {
-          cantidad: number
-          created_at?: string
-          descuento_porcentaje?: number
-          id?: string
-          iva_porcentaje?: number
-          observaciones?: string | null
-          pedido_id: string
-          precio_unitario: number
-          producto_id: string
-          subtotal: number
-          total_linea: number
-        }
-        Update: {
-          cantidad?: number
-          created_at?: string
-          descuento_porcentaje?: number
-          id?: string
-          iva_porcentaje?: number
-          observaciones?: string | null
-          pedido_id?: string
-          precio_unitario?: number
-          producto_id?: string
-          subtotal?: number
-          total_linea?: number
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "cobros_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_pedido_id_fkey"
+            columns: ["pedido_id"]
+            isOneToOne: false
+            referencedRelation: "pedidos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_preventista_id_fkey"
+            columns: ["preventista_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_rendicion_id_fkey"
+            columns: ["rendicion_id"]
+            isOneToOne: false
+            referencedRelation: "rendiciones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pedidos: {
         Row: {
@@ -243,6 +244,7 @@ export type Database = {
           created_at: string
           deposito_id: string | null
           dispositivo_origen: string | null
+          empresa_id: string | null
           estado: Database["public"]["Enums"]["estado_pedido"]
           fecha_confirmacion: string | null
           fecha_entrega_estimada: string | null
@@ -265,6 +267,7 @@ export type Database = {
           created_at?: string
           deposito_id?: string | null
           dispositivo_origen?: string | null
+          empresa_id?: string | null
           estado?: Database["public"]["Enums"]["estado_pedido"]
           fecha_confirmacion?: string | null
           fecha_entrega_estimada?: string | null
@@ -287,6 +290,7 @@ export type Database = {
           created_at?: string
           deposito_id?: string | null
           dispositivo_origen?: string | null
+          empresa_id?: string | null
           estado?: Database["public"]["Enums"]["estado_pedido"]
           fecha_confirmacion?: string | null
           fecha_entrega_estimada?: string | null
@@ -304,204 +308,89 @@ export type Database = {
           updated_at?: string
           uuid_offline?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_lista_precios_id_fkey"
+            columns: ["lista_precios_id"]
+            isOneToOne: false
+            referencedRelation: "listas_precios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_preventista_id_fkey"
+            columns: ["preventista_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      perfiles: {
+      rendiciones: {
         Row: {
-          activo: boolean
           created_at: string
-          email: string
+          empresa_id: string
+          estado: string
+          fecha: string
           id: string
-          nombre_completo: string
-          rol: Database["public"]["Enums"]["rol_usuario"]
-          telefono: string | null
-          updated_at: string
-          zonas_asignadas: string[] | null
-        }
-        Insert: {
-          activo?: boolean
-          created_at?: string
-          email: string
-          id: string
-          nombre_completo: string
-          rol?: Database["public"]["Enums"]["rol_usuario"]
-          telefono?: string | null
-          updated_at?: string
-          zonas_asignadas?: string[] | null
-        }
-        Update: {
-          activo?: boolean
-          created_at?: string
-          email?: string
-          id?: string
-          nombre_completo?: string
-          rol?: Database["public"]["Enums"]["rol_usuario"]
-          telefono?: string | null
-          updated_at?: string
-          zonas_asignadas?: string[] | null
-        }
-        Relationships: []
-      }
-      productos: {
-        Row: {
-          activo: boolean
-          categoria_id: string | null
-          codigo_barras: string | null
-          codigo_interno: string
-          costo: number
-          created_at: string
-          descripcion: string | null
-          id: string
-          iva_porcentaje: number
-          nombre: string
-          peso_kg: number | null
-          stock_actual: number
-          stock_minimo: number
-          stock_reservado: number
-          unidad_medida_id: string
-          unidades_por_bulto: number
+          observaciones: string | null
+          preventista_id: string
+          total_cobrado: number
           updated_at: string
         }
         Insert: {
-          activo?: boolean
-          categoria_id?: string | null
-          codigo_barras?: string | null
-          codigo_interno: string
-          costo?: number
           created_at?: string
-          descripcion?: string | null
+          empresa_id: string
+          estado?: string
+          fecha?: string
           id?: string
-          iva_porcentaje?: number
-          nombre: string
-          peso_kg?: number | null
-          stock_actual?: number
-          stock_minimo?: number
-          stock_reservado?: number
-          unidad_medida_id: string
-          unidades_por_bulto?: number
+          observaciones?: string | null
+          preventista_id: string
+          total_cobrado?: number
           updated_at?: string
         }
         Update: {
-          activo?: boolean
-          categoria_id?: string | null
-          codigo_barras?: string | null
-          codigo_interno?: string
-          costo?: number
           created_at?: string
-          descripcion?: string | null
+          empresa_id?: string
+          estado?: string
+          fecha?: string
           id?: string
-          iva_porcentaje?: number
-          nombre?: string
-          peso_kg?: number | null
-          stock_actual?: number
-          stock_minimo?: number
-          stock_reservado?: number
-          unidad_medida_id?: string
-          unidades_por_bulto?: number
+          observaciones?: string | null
+          preventista_id?: string
+          total_cobrado?: number
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "rendiciones_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rendiciones_preventista_id_fkey"
+            columns: ["preventista_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      stock_movimientos: {
-        Row: {
-          cantidad: number
-          created_at: string
-          deposito_id: string | null
-          id: string
-          motivo: string | null
-          pedido_id: string | null
-          producto_id: string
-          stock_posterior: number
-          stock_previo: number
-          tipo: Database["public"]["Enums"]["tipo_movimiento_stock"]
-          usuario_id: string | null
-        }
-        Insert: {
-          cantidad: number
-          created_at?: string
-          deposito_id?: string | null
-          id?: string
-          motivo?: string | null
-          pedido_id?: string | null
-          producto_id: string
-          stock_posterior: number
-          stock_previo: number
-          tipo: Database["public"]["Enums"]["tipo_movimiento_stock"]
-          usuario_id?: string | null
-        }
-        Update: {
-          cantidad?: number
-          created_at?: string
-          deposito_id?: string | null
-          id?: string
-          motivo?: string | null
-          pedido_id?: string | null
-          producto_id?: string
-          stock_posterior?: number
-          stock_previo?: number
-          tipo?: Database["public"]["Enums"]["tipo_movimiento_stock"]
-          usuario_id?: string | null
-        }
-        Relationships: []
-      }
-      unidades_medida: {
-        Row: {
-          activo: boolean
-          codigo: string
-          id: string
-          nombre: string
-        }
-        Insert: {
-          activo?: boolean
-          codigo: string
-          id?: string
-          nombre: string
-        }
-        Update: {
-          activo?: boolean
-          codigo?: string
-          id?: string
-          nombre?: string
-        }
-        Relationships: []
-      }
-      zonas: {
-        Row: {
-          activo: boolean
-          created_at: string
-          descripcion: string | null
-          dia_visita: Database["public"]["Enums"]["dia_semana"]
-          id: string
-          nombre: string
-        }
-        Insert: {
-          activo?: boolean
-          created_at?: string
-          descripcion?: string | null
-          dia_visita: Database["public"]["Enums"]["dia_semana"]
-          id?: string
-          nombre: string
-        }
-        Update: {
-          activo?: boolean
-          created_at?: string
-          descripcion?: string | null
-          dia_visita?: Database["public"]["Enums"]["dia_semana"]
-          id?: string
-          nombre?: string
-        }
-        Relationships: []
-      }
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      auth_rol: {
-        Args: never
-        Returns: Database["public"]["Enums"]["rol_usuario"]
-      }
-      stock_disponible: { Args: { p_producto_id: string }; Returns: number }
+      [key: string]: any
     }
     Enums: {
       condicion_iva:
@@ -524,7 +413,7 @@ export type Database = {
         | "facturado"
         | "entregado"
         | "cancelado"
-      rol_usuario: "admin" | "preventista" | "supervisor" | "deposito"
+      rol_usuario: "admin" | "preventista" | "supervisor" | "deposito" | "chofer"
       tipo_movimiento_stock:
         | "ingreso"
         | "egreso"
@@ -532,21 +421,8 @@ export type Database = {
         | "devolucion"
         | "transferencia"
     }
-    CompositeTypes: {
-      [_ in never]: never
-    }
   }
 }
-
-// Tipos de conveniencia derivados del schema generado
-export type Producto = Database["public"]["Tables"]["productos"]["Row"]
-export type Cliente = Database["public"]["Tables"]["clientes"]["Row"]
-export type Pedido = Database["public"]["Tables"]["pedidos"]["Row"]
-export type PedidoDetalle = Database["public"]["Tables"]["pedido_detalles"]["Row"]
-export type ListaPrecios = Database["public"]["Tables"]["listas_precios"]["Row"]
-export type ListaPreciosItem = Database["public"]["Tables"]["lista_precios_items"]["Row"]
-export type Categoria = Database["public"]["Tables"]["categorias"]["Row"]
-export type UnidadMedida = Database["public"]["Tables"]["unidades_medida"]["Row"]
 
 export type RolUsuario = Database["public"]["Enums"]["rol_usuario"]
 export type EstadoPedido = Database["public"]["Enums"]["estado_pedido"]

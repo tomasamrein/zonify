@@ -24,6 +24,7 @@ export interface ItemCarrito {
 export interface PedidoOffline {
   uuid_offline: string
   id_servidor?: string
+  empresa_id: string
   cliente_id: string
   cliente_nombre: string   // desnormalizado
   preventista_id: string
@@ -71,7 +72,7 @@ interface VentasState {
   limpiarCarrito: () => void
 
   // ── Actions: pedidos ──────────────────────────────────────────────────────
-  confirmarPedido: (opts: { preventista_id: string; observaciones?: string }) => Promise<string>
+  confirmarPedido: (opts: { empresa_id: string; preventista_id: string; observaciones?: string }) => Promise<string>
   sincronizarCola: () => Promise<void>
   marcarSincronizado: (uuid_offline: string, id_servidor: string) => void
   marcarError: (uuid_offline: string, error: string) => void
@@ -237,7 +238,7 @@ export const useVentasStore = create<VentasState>()(
 
       // ── Confirmar pedido (online o encolado offline) ────────────────────────
 
-      confirmarPedido: async ({ preventista_id, observaciones }) => {
+      confirmarPedido: async ({ empresa_id, preventista_id, observaciones }) => {
         const { carrito, clienteSeleccionadoId, clienteSeleccionadoNombre, listaPreciosId } = get()
 
         if (!clienteSeleccionadoId || !clienteSeleccionadoNombre) throw new Error('Seleccioná un cliente')
@@ -249,6 +250,7 @@ export const useVentasStore = create<VentasState>()(
 
         const pedido: PedidoOffline = {
           uuid_offline,
+          empresa_id,
           cliente_id: clienteSeleccionadoId,
           cliente_nombre: clienteSeleccionadoNombre,
           preventista_id,
@@ -278,13 +280,15 @@ export const useVentasStore = create<VentasState>()(
 
       sincronizarCola: async () => {
         const { colaOffline, sincronizando } = get()
-        if (sincronizando || !navigator.onLine) return
+        if (sincronizando) return
 
         const pendientes = colaOffline.filter(
-          (p) => p.estado_sync === 'pendiente' || (p.estado_sync === 'error' && p.intentos_sync < 5),
+          (p) =>
+            p.estado_sync === 'pendiente' ||
+            (p.estado_sync === 'error' && p.intentos_sync < 5) ||
+            p.estado_sync === 'sincronizando'  // Reintentar los que se quedaron en sincronizando
         )
         if (pendientes.length === 0) return
-
         set({ sincronizando: true })
 
         for (const pedido of pendientes) {
@@ -298,6 +302,7 @@ export const useVentasStore = create<VentasState>()(
             const { data: pedidoDB, error: errPedido } = await supabase
               .from('pedidos')
               .insert({
+                empresa_id: pedido.empresa_id,
                 cliente_id: pedido.cliente_id,
                 preventista_id: pedido.preventista_id,
                 lista_precios_id: pedido.lista_precios_id,
@@ -379,16 +384,15 @@ export const useVentasStore = create<VentasState>()(
     {
       name: 'zonify-ventas',
       storage: createJSONStorage(() => localStorage),
-      // Solo persistir lo crítico — sincronizando/cargandoProductos se recalculan
+      // Solo persistir lo crítico — NO persistir productos (se recargan de BD, pesan demasiado)
       partialize: (s) => ({
-        productos: s.productos,
-        ultimaCargaProductos: s.ultimaCargaProductos,
         carrito: s.carrito,
         clienteSeleccionadoId: s.clienteSeleccionadoId,
         clienteSeleccionadoNombre: s.clienteSeleccionadoNombre,
         listaPreciosId: s.listaPreciosId,
         colaOffline: s.colaOffline,
         ultimaSync: s.ultimaSync,
+        ultimaCargaProductos: s.ultimaCargaProductos,
       }),
     },
   ),

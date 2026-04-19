@@ -13,7 +13,7 @@ export default function ClientesPage() {
 
   const clientesFiltrados = clientes.filter((c) =>
     c.razon_social.toLowerCase().includes(filtro.toLowerCase()) ||
-    c.codigo.toLowerCase().includes(filtro.toLowerCase())
+    (c.codigo ?? '').toLowerCase().includes(filtro.toLowerCase())
   )
 
   if (cargando) {

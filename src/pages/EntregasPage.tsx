@@ -157,9 +157,11 @@ export default function EntregasPage() {
       const { data: pedidoDB } = await supabase
         .from('pedidos').select('cliente_id').eq('id', modalCobro.pedidoId).single()
 
+      if (!pedidoDB?.cliente_id) throw new Error('No se encontró el cliente del pedido')
+
       const { error: err } = await supabase.from('cobros').insert({
-        empresa_id: empresaId,
-        cliente_id: pedidoDB?.cliente_id,
+        empresa_id: empresaId!,
+        cliente_id: pedidoDB.cliente_id,
         preventista_id: perfil.id,
         pedido_id: modalCobro.pedidoId,
         monto: montoNum,

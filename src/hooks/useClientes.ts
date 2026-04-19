@@ -3,8 +3,6 @@ import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
 import type { Database } from '@/types/database'
 
-type Perfil = Database['public']['Tables']['perfiles']['Row']
-
 type DiaSemana = Database['public']['Enums']['dia_semana']
 export type ClienteConZona = Database['public']['Tables']['clientes']['Row'] & {
   zonas: { nombre: string } | null

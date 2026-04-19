@@ -45,7 +45,7 @@ export default function CobrosPage() {
 
   // Cargar pedidos del cliente para el select
   const cargarPedidosCliente = async (clienteId: string) => {
-    if (!empresaId) return
+    if (!empresaId) return []
     const { data } = await supabase
       .from('pedidos')
       .select('id, numero_pedido, total')

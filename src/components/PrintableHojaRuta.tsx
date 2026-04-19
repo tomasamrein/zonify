@@ -77,7 +77,7 @@ export function PrintableHojaRuta({ data }: { data: HojaRutaData }) {
 
         {/* Clientes */}
         <div className="space-y-3">
-          {data.clientes.map((cliente, idx) => {
+          {data.clientes.map((cliente) => {
             const totalCliente = cliente.pedidos.reduce((sum, p) => sum + p.total, 0)
             const totalBultos = cliente.pedidos.reduce((sum, p) => sum + p.detalles.reduce((ds, d) => ds + d.cantidad, 0), 0)
 

@@ -10,7 +10,6 @@ import { useClientes } from '@/hooks/useClientes'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { Badge } from '@/components/ui/Badge'
 import { cn } from '@/lib/utils'
 import type { ProductoConPrecio } from '@/store/useVentasStore'
 
@@ -453,7 +452,7 @@ export default function NuevaVentaPage() {
   const { setCliente, setListaPrecios, cargarProductos, limpiarCarrito } = useVentasStore()
 
   const [paso, setPaso] = useState<Paso>('selector')
-  const [clienteId, setClienteId] = useState<string | null>(null)
+  const [_clienteId, setClienteId] = useState<string | null>(null)
   const [clienteNombre, setClienteNombre] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [errorLista, setErrorLista] = useState<string | null>(null)

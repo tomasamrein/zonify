@@ -88,8 +88,8 @@ function DashboardAdmin() {
         const [pedidosHoyRes, pedidosRecientesRes, clientesRes, productosRes, pendientesRes] = await Promise.all([
           supabase.from('pedidos').select('id, total').gte('fecha_pedido', hoyIso),
           supabase.from('pedidos').select('id, numero_pedido, total, estado, fecha_pedido, clientes(razon_social)').order('fecha_pedido', { ascending: false }).limit(5),
-          supabase.from('clientes').select('id', { count: 'exact', head: true }).eq('empresa_id', empresaId).eq('activo', true),
-          supabase.from('productos').select('nombre, stock_actual, stock_minimo').eq('empresa_id', empresaId).eq('activo', true),
+          supabase.from('clientes').select('id', { count: 'exact', head: true }).eq('empresa_id', empresaId!).eq('activo', true),
+          supabase.from('productos').select('nombre, stock_actual, stock_minimo').eq('empresa_id', empresaId!).eq('activo', true),
           supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('estado', 'pendiente'),
         ])
         const pedidosHoy = pedidosHoyRes.data ?? []
@@ -206,7 +206,7 @@ function DashboardDeposito() {
         const [confirmRes, factRes, productosRes, pedidosRes] = await Promise.all([
           supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('estado', 'confirmado'),
           supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('estado', 'facturado'),
-          supabase.from('productos').select('stock_actual, stock_minimo').eq('empresa_id', empresaId).eq('activo', true),
+          supabase.from('productos').select('stock_actual, stock_minimo').eq('empresa_id', empresaId!).eq('activo', true),
           supabase.from('pedidos').select('id, numero_pedido, total, estado, fecha_pedido, clientes(razon_social)').in('estado', ['confirmado', 'facturado']).order('fecha_pedido', { ascending: true }).limit(8),
         ])
         const stockCritico = (productosRes.data ?? []).filter((p) => p.stock_actual <= p.stock_minimo).length

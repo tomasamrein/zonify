@@ -69,7 +69,7 @@ function VistaRendicionPropia() {
           .limit(1),
       ])
       setCobrosHoy((cobros ?? []) as Cobro[])
-      setRendicionHoy(rendiciones?.[0] ?? null)
+      setRendicionHoy((rendiciones?.[0] ?? null) as Rendicion | null)
     } finally {
       setCargando(false)
     }

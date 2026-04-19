@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AlertCircle, RefreshCw, ShoppingCart, WifiOff, MessageCircle, Check, X } from 'lucide-react'
+import { AlertCircle, RefreshCw, ShoppingCart, WifiOff, MessageCircle, Check } from 'lucide-react'
 import { usePedidos } from '@/hooks/usePedidos'
 import { useVentasStore } from '@/store/useVentasStore'
 import { useAuthStore } from '@/store/useAuthStore'
@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { supabase } from '@/lib/supabase'
 import type { Database } from '@/types/database'
-import { cn } from '@/lib/utils'
+
 
 type EstadoPedido = Database['public']['Enums']['estado_pedido']
 

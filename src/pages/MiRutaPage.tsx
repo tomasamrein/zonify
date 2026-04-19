@@ -46,7 +46,7 @@ export default function MiRutaPage() {
             pedido_detalles ( cantidad )
           )
         `)
-        .eq('empresa_id', empresaId)
+        .eq('empresa_id', empresaId!)
         .in('id', clientes.map(c => c.id))
 
       if (err || !data) {

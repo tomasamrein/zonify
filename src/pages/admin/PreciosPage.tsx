@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { AlertCircle, RefreshCw, DollarSign, Upload, CheckCircle2, XCircle } from 'lucide-react'
+import { AlertCircle, RefreshCw, DollarSign, Upload, CheckCircle2 } from 'lucide-react'
 import * as XLSX from 'xlsx'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
@@ -273,7 +273,7 @@ export default function AdminPreciosPage() {
         if (fila.esNuevo) {
           const { data: prod, error: prodErr } = await supabase
             .from('productos')
-            .insert({ codigo_interno: fila.codigo, nombre: fila.nombre, descripcion: fila.presentacion, empresa_id: empresaId, unidad_medida_id: unidadId })
+            .insert({ codigo_interno: fila.codigo, nombre: fila.nombre, descripcion: fila.presentacion, empresa_id: empresaId!, unidad_medida_id: unidadId! })
             .select('id')
             .single()
           if (prodErr) continue

@@ -50,7 +50,7 @@ export default function StockPage() {
     setCargando(true)
     setError(null)
     try {
-      const [{ data: prods, error: e1 }, { data: movs, error: e2 }] = await Promise.all([
+      const [{ data: prods, error: e1 }, { data: movs }] = await Promise.all([
         supabase
           .from('productos')
           .select('id, codigo_interno, nombre, stock_actual, unidades_medida(codigo)')

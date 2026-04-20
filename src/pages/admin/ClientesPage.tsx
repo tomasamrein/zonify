@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Plus, Pencil, Users, Search, RefreshCw, AlertCircle } from 'lucide-react'
+import { Plus, Pencil, Users, Search, RefreshCw, AlertCircle, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Button } from '@/components/ui/Button'
@@ -82,6 +82,7 @@ export default function ClientesPage() {
   const [form, setForm]                 = useState<Form>(EMPTY)
   const [guardando, setGuardando]       = useState(false)
   const [formError, setFormError]       = useState<string | null>(null)
+  const [confirmarEliminarId, setConfirmarEliminarId] = useState<string | null>(null)
 
   const cargar = useCallback(async () => {
     if (!empresaId) return
@@ -196,6 +197,16 @@ export default function ClientesPage() {
     }
   }
 
+  async function eliminar(id: string) {
+    const { error } = await supabase.from('clientes').delete().eq('id', id)
+    if (error) {
+      alert('No se puede eliminar: el cliente tiene pedidos o cobros asociados.')
+    } else {
+      cargar()
+    }
+    setConfirmarEliminarId(null)
+  }
+
   async function toggleActivo(c: ClienteRow) {
     await supabase.from('clientes').update({ activo: !c.activo }).eq('id', c.id)
     cargar()
@@ -253,6 +264,7 @@ export default function ClientesPage() {
                   <th className="text-left px-4 py-3 font-medium text-[var(--color-ink-muted)] hidden md:table-cell">Zona</th>
                   <th className="text-left px-4 py-3 font-medium text-[var(--color-ink-muted)] hidden md:table-cell">Día visita</th>
                   <th className="text-left px-4 py-3 font-medium text-[var(--color-ink-muted)] hidden lg:table-cell">Preventista</th>
+                  <th className="text-left px-4 py-3 font-medium text-[var(--color-ink-muted)] hidden xl:table-cell">Lista precios</th>
                   <th className="text-right px-4 py-3 font-medium text-[var(--color-ink-muted)] hidden lg:table-cell">Saldo CC</th>
                   <th className="text-center px-4 py-3 font-medium text-[var(--color-ink-muted)]">Estado</th>
                   <th className="px-4 py-3 w-24" />
@@ -261,7 +273,7 @@ export default function ClientesPage() {
               <tbody className="divide-y divide-[var(--color-border)]">
                 {filtrados.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-center py-12 text-[var(--color-ink-muted)]">
+                    <td colSpan={8} className="text-center py-12 text-[var(--color-ink-muted)]">
                       {busqueda ? 'Sin resultados para la búsqueda.' : (
                         <div className="flex flex-col items-center gap-2">
                           <Users className="w-8 h-8 opacity-30" />
@@ -288,6 +300,9 @@ export default function ClientesPage() {
                       <td className="px-4 py-3 text-[var(--color-ink-muted)] hidden lg:table-cell">
                         {c.perfiles?.nombre_completo ?? '—'}
                       </td>
+                      <td className="px-4 py-3 text-[var(--color-ink-muted)] hidden xl:table-cell text-sm">
+                        {c.listas_precios?.nombre ?? <span className="italic opacity-60">Default</span>}
+                      </td>
                       <td className="px-4 py-3 text-right hidden lg:table-cell">
                         <span className={c.saldo_cuenta_corriente < 0 ? 'text-red-600 font-medium' : 'text-[var(--color-ink)]'}>
                           {formatARS(c.saldo_cuenta_corriente)}
@@ -297,20 +312,31 @@ export default function ClientesPage() {
                         <Badge tone={c.activo ? 'success' : 'neutral'}>{c.activo ? 'Activo' : 'Inactivo'}</Badge>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 justify-end">
-                          <Button size="icon" variant="ghost" onClick={() => abrirEditar(c)} title="Editar">
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => toggleActivo(c)}
-                            title={c.activo ? 'Desactivar' : 'Activar'}
-                            className={c.activo ? '' : 'text-green-600'}
-                          >
-                            <Users className="w-4 h-4" />
-                          </Button>
-                        </div>
+                        {confirmarEliminarId === c.id ? (
+                          <div className="flex items-center gap-1 justify-end">
+                            <span className="text-xs text-red-600 mr-1">¿Eliminar?</span>
+                            <Button size="sm" variant="ghost" className="text-red-600 h-7 px-2 text-xs" onClick={() => eliminar(c.id)}>Sí</Button>
+                            <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => setConfirmarEliminarId(null)}>No</Button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1 justify-end">
+                            <Button size="icon" variant="ghost" onClick={() => abrirEditar(c)} title="Editar">
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => toggleActivo(c)}
+                              title={c.activo ? 'Desactivar' : 'Activar'}
+                              className={c.activo ? '' : 'text-green-600'}
+                            >
+                              <Users className="w-4 h-4" />
+                            </Button>
+                            <Button size="icon" variant="ghost" onClick={() => setConfirmarEliminarId(c.id)} title="Eliminar" className="text-red-500 hover:text-red-400">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))

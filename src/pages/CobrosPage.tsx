@@ -43,32 +43,51 @@ export default function CobrosPage() {
   const [cerrandoRendicion, setCerrandoRendicion] = useState(false)
   const [cobrosHoy, setCobrosHoy] = useState<Array<{ cliente_id: string; monto: number }>>([])
 
-  // Cargar pedidos del cliente para el select
+  // Cargar pedidos del cliente con saldo pendiente
   const cargarPedidosCliente = async (clienteId: string) => {
     if (!empresaId) return []
-    const { data } = await supabase
+    const { data: pedidos } = await supabase
       .from('pedidos')
       .select('id, numero_pedido, total')
       .eq('cliente_id', clienteId)
-      .eq('estado', 'facturado')
-    return data || []
+      .in('estado', ['facturado', 'entregado'])
+      .order('numero_pedido', { ascending: false })
+    if (!pedidos?.length) return []
+
+    // Calcular saldo por pedido: total - sum(cobros)
+    const { data: cobros } = await supabase
+      .from('cobros')
+      .select('pedido_id, monto')
+      .in('pedido_id', pedidos.map((p) => p.id))
+
+    return pedidos
+      .map((p) => {
+        const cobrado = cobros?.filter((c) => c.pedido_id === p.id).reduce((s, c) => s + c.monto, 0) ?? 0
+        return { ...p, saldo: p.total - cobrado }
+      })
+      .filter((p) => p.saldo > 0.01)
   }
 
   const abrirModalCobro = async (cliente: typeof clientesBase[0]) => {
     const pedidos = await cargarPedidosCliente(cliente.id)
+    const primerPedido = pedidos[0]
     setClienteSeleccionado({
       ...cliente,
       saldo_cuenta_corriente: cliente.saldo_cuenta_corriente,
       pedidos,
     } as any)
-    setForma({ monto: '', forma_pago: 'efectivo', pedido_id: pedidos[0]?.id || '', observaciones: '' })
+    setForma({
+      monto: primerPedido ? String(primerPedido.saldo.toFixed(2)) : '',
+      forma_pago: 'efectivo',
+      pedido_id: primerPedido?.id || '',
+      observaciones: '',
+    })
     setModalCobro(true)
   }
 
   const registrarCobro = async () => {
     if (!clienteSeleccionado || !empresaId || !perfil) return
     setGuardando(true)
-
     try {
       const monto = parseFloat(forma.monto)
       if (!monto || monto <= 0) throw new Error('Monto debe ser mayor a 0')
@@ -83,8 +102,14 @@ export default function CobrosPage() {
         observaciones: forma.observaciones,
         fecha: new Date().toISOString().split('T')[0],
       })
-
       if (err) throw err
+
+      // Actualizar saldo_cuenta_corriente del cliente
+      const saldoActual = clienteSeleccionado.saldo_cuenta_corriente ?? 0
+      await supabase
+        .from('clientes')
+        .update({ saldo_cuenta_corriente: saldoActual - monto })
+        .eq('id', clienteSeleccionado.id)
 
       setCobrosHoy([...cobrosHoy, { cliente_id: clienteSeleccionado.id, monto }])
       setModalCobro(false)
@@ -255,16 +280,23 @@ export default function CobrosPage() {
 
           {clienteSeleccionado?.pedidos && clienteSeleccionado.pedidos.length > 0 && (
             <div>
-              <label className="text-sm font-semibold text-[var(--color-ink)] block mb-1">Pedido (opcional)</label>
+              <label className="text-sm font-semibold text-[var(--color-ink)] block mb-1">Pedido</label>
               <select
                 value={forma.pedido_id}
-                onChange={(e) => setForma({ ...forma, pedido_id: e.target.value })}
+                onChange={(e) => {
+                  const pedido = (clienteSeleccionado.pedidos as any[]).find((p) => p.id === e.target.value)
+                  setForma({
+                    ...forma,
+                    pedido_id: e.target.value,
+                    monto: pedido ? String(pedido.saldo.toFixed(2)) : forma.monto,
+                  })
+                }}
                 className="w-full border border-[var(--color-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
                 <option value="">Sin pedido asociado</option>
-                {clienteSeleccionado.pedidos.map((p) => (
+                {(clienteSeleccionado.pedidos as any[]).map((p) => (
                   <option key={p.id} value={p.id}>
-                    Pedido #{p.numero_pedido} - {formatARS(p.total)}
+                    Pedido #{p.numero_pedido} — Saldo: {formatARS(p.saldo)}
                   </option>
                 ))}
               </select>

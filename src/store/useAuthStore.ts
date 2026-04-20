@@ -15,6 +15,7 @@ interface AuthState {
 
   inicializar:    () => Promise<void>
   loginVendedor:  (slug: string, codigoVendedor: string, password: string) => Promise<void>
+  loginEmail:     (email: string, password: string) => Promise<void>
   logout:         () => Promise<void>
 }
 
@@ -80,6 +81,16 @@ export const useAuthStore = create<AuthState>()((set) => ({
       if (authError) {
         throw new Error('Código de vendedor o contraseña incorrectos.')
       }
+    } finally {
+      set({ cargando: false })
+    }
+  },
+
+  loginEmail: async (email, password) => {
+    set({ cargando: true })
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) throw new Error('Email o contraseña incorrectos.')
     } finally {
       set({ cargando: false })
     }

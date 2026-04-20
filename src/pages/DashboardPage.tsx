@@ -350,6 +350,11 @@ export default function DashboardPage() {
       {perfil?.rol === 'preventista' && <DashboardPreventista />}
       {perfil?.rol === 'deposito' && <DashboardDeposito />}
       {perfil?.rol === 'chofer' && <DashboardChofer />}
+      {!perfil && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-800">
+          Tu usuario no tiene un perfil asignado a ninguna empresa. Pedile al administrador que te agregue desde el panel de usuarios.
+        </div>
+      )}
     </div>
   )
 }

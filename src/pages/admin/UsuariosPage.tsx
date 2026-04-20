@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Pencil, RefreshCw, AlertCircle, Info } from 'lucide-react'
+import { Pencil, RefreshCw, AlertCircle, Info, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Button } from '@/components/ui/Button'
@@ -48,6 +48,7 @@ export default function UsuariosPage() {
   const [form, setForm]           = useState<Form>({ rol: 'preventista', activo: true, telefono: '', zonas_asignadas: [] })
   const [guardando, setGuardando] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
+  const [confirmarEliminarId, setConfirmarEliminarId] = useState<string | null>(null)
 
   const cargar = useCallback(async () => {
     if (!empresaId) return
@@ -116,6 +117,16 @@ export default function UsuariosPage() {
     } finally {
       setGuardando(false)
     }
+  }
+
+  async function eliminar(id: string) {
+    const { error } = await supabase.from('perfiles').delete().eq('id', id)
+    if (error) {
+      alert('No se puede eliminar: el usuario tiene registros asociados.')
+    } else {
+      cargar()
+    }
+    setConfirmarEliminarId(null)
   }
 
   if (cargando) {
@@ -190,15 +201,22 @@ export default function UsuariosPage() {
                       <Badge tone={p.activo ? 'success' : 'neutral'}>{p.activo ? 'Activo' : 'Inactivo'}</Badge>
                     </td>
                     <td className="px-4 py-3">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => abrirEditar(p)}
-                        title="Editar"
-                        disabled={p.id === userId}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
+                      {confirmarEliminarId === p.id ? (
+                        <div className="flex items-center gap-1 justify-end">
+                          <span className="text-xs text-red-600 mr-1">¿Eliminar?</span>
+                          <Button size="sm" variant="ghost" className="text-red-600 h-7 px-2 text-xs" onClick={() => eliminar(p.id)}>Sí</Button>
+                          <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => setConfirmarEliminarId(null)}>No</Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 justify-end">
+                          <Button size="icon" variant="ghost" onClick={() => abrirEditar(p)} title="Editar" disabled={p.id === userId}>
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost" onClick={() => setConfirmarEliminarId(p.id)} title="Eliminar" className="text-red-500 hover:text-red-400" disabled={p.id === userId}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Plus, Pencil, Package, Search, RefreshCw, AlertCircle } from 'lucide-react'
+import { Plus, Pencil, Package, Search, RefreshCw, AlertCircle, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Button } from '@/components/ui/Button'
@@ -49,6 +49,7 @@ export default function ProductosPage() {
   const [form, setForm] = useState<Form>(EMPTY)
   const [guardando, setGuardando] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
+  const [confirmarEliminarId, setConfirmarEliminarId] = useState<string | null>(null)
 
   const cargar = useCallback(async () => {
     if (!empresaId) return
@@ -139,6 +140,16 @@ export default function ProductosPage() {
     } finally {
       setGuardando(false)
     }
+  }
+
+  async function eliminar(id: string) {
+    const { error } = await supabase.from('productos').delete().eq('id', id)
+    if (error) {
+      alert('No se puede eliminar: el producto tiene pedidos o movimientos asociados.')
+    } else {
+      cargar()
+    }
+    setConfirmarEliminarId(null)
   }
 
   async function toggleActivo(p: ProductoRow) {
@@ -238,20 +249,31 @@ export default function ProductosPage() {
                         <Badge tone={p.activo ? 'success' : 'neutral'}>{p.activo ? 'Activo' : 'Inactivo'}</Badge>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 justify-end">
-                          <Button size="icon" variant="ghost" onClick={() => abrirEditar(p)} title="Editar">
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => toggleActivo(p)}
-                            title={p.activo ? 'Desactivar' : 'Activar'}
-                            className={p.activo ? '' : 'text-green-600'}
-                          >
-                            <Package className="w-4 h-4" />
-                          </Button>
-                        </div>
+                        {confirmarEliminarId === p.id ? (
+                          <div className="flex items-center gap-1 justify-end">
+                            <span className="text-xs text-red-600 mr-1">¿Eliminar?</span>
+                            <Button size="sm" variant="ghost" className="text-red-600 h-7 px-2 text-xs" onClick={() => eliminar(p.id)}>Sí</Button>
+                            <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => setConfirmarEliminarId(null)}>No</Button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1 justify-end">
+                            <Button size="icon" variant="ghost" onClick={() => abrirEditar(p)} title="Editar">
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => toggleActivo(p)}
+                              title={p.activo ? 'Desactivar' : 'Activar'}
+                              className={p.activo ? '' : 'text-green-600'}
+                            >
+                              <Package className="w-4 h-4" />
+                            </Button>
+                            <Button size="icon" variant="ghost" onClick={() => setConfirmarEliminarId(p.id)} title="Eliminar" className="text-red-500 hover:text-red-400">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))

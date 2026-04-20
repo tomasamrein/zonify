@@ -6,11 +6,16 @@ import { useAuthStore } from '@/store/useAuthStore'
 import { getNavForRole } from './navConfig'
 import { DevRoleSwitcher } from '@/components/DevRoleSwitcher'
 import { useSwipeNav } from '@/hooks/useSwipeNav'
+import { usePlan } from '@/hooks/usePlan'
+import { useNotificaciones } from '@/hooks/useNotificaciones'
 
 export function AppLayout() {
   const { perfil } = useAuthStore()
+  const { tieneModulo } = usePlan()
+  useNotificaciones()
   const location = useLocation()
-  const nav = getNavForRole(perfil?.rol)
+  const allNav = getNavForRole(perfil?.rol)
+  const nav = allNav.filter((item) => !item.modulo || tieneModulo(item.modulo))
   const current = nav.find((n) => n.to === location.pathname)
   const title = current?.label ?? 'Zonify'
   const { onTouchStart, onTouchEnd } = useSwipeNav(nav)

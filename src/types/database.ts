@@ -1039,6 +1039,46 @@ export type Database = {
         Returns: number
       }
       stock_disponible: { Args: { p_producto_id: string }; Returns: number }
+      verificar_slug_disponible: {
+        Args: { p_slug: string }
+        Returns: boolean
+      }
+      crear_empresa_con_admin: {
+        Args: {
+          p_nombre: string
+          p_slug: string
+          p_cuit: string
+          p_email: string
+          p_nombre_admin: string
+          p_codigo_admin: string
+          p_user_id: string
+          p_plan?: string
+        }
+        Returns: string
+      }
+      es_superadmin: { Args: Record<never, never>; Returns: boolean }
+      superadmin_listar_empresas: {
+        Args: Record<never, never>
+        Returns: {
+          id: string
+          nombre: string
+          slug: string
+          plan: string
+          activo: boolean
+          created_at: string
+          email_contacto: string
+          total_usuarios: number
+          total_pedidos: number
+        }[]
+      }
+      superadmin_cambiar_plan: {
+        Args: { p_empresa_id: string; p_plan: string }
+        Returns: void
+      }
+      superadmin_toggle_empresa: {
+        Args: { p_empresa_id: string; p_activo: boolean }
+        Returns: void
+      }
     }
     Enums: {
       condicion_iva:

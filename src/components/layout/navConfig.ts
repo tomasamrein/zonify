@@ -13,49 +13,55 @@ import {
   DollarSign,
   CreditCard,
   ClipboardCheck,
+  Settings,
   type LucideIcon,
 } from 'lucide-react'
 import type { RolUsuario } from '@/types/database'
+import type { Modulo } from '@/lib/planesConfig'
 
 export interface NavItem {
   to: string
   label: string
   icon: LucideIcon
-  primary?: boolean // marcado como acción rápida en mobile
+  primary?: boolean
+  modulo?: Modulo // si está presente, el ítem solo aparece si la empresa tiene ese módulo
 }
 
 const ADMIN_NAV: NavItem[] = [
   { to: '/',                   label: 'Dashboard',    icon: LayoutDashboard },
-  { to: '/admin/clientes',     label: 'Clientes',     icon: Users },
-  { to: '/admin/productos',    label: 'Productos',    icon: Package },
-  { to: '/admin/precios',      label: 'Precios',      icon: DollarSign },
-  { to: '/admin/pedidos',      label: 'Aprobación',   icon: ClipboardCheck },
-  { to: '/pedidos',            label: 'Pedidos',      icon: ShoppingCart },
-  { to: '/rendicion',          label: 'Rendiciones',  icon: CreditCard },
-  { to: '/admin/zonas',        label: 'Zonas',        icon: Map },
-  { to: '/admin/preventistas', label: 'Preventistas', icon: UserCog },
-  { to: '/reportes',           label: 'Reportes',     icon: BarChart3 },
-  { to: '/facturacion',        label: 'Facturación',  icon: FileText },
+  { to: '/admin/clientes',     label: 'Clientes',     icon: Users,          modulo: 'preventa' },
+  { to: '/admin/productos',    label: 'Productos',    icon: Package,        modulo: 'stock' },
+  { to: '/admin/precios',      label: 'Precios',      icon: DollarSign,     modulo: 'stock' },
+  { to: '/admin/stock',        label: 'Stock',        icon: Warehouse,      modulo: 'stock' },
+  { to: '/admin/pedidos',      label: 'Aprobación',   icon: ClipboardCheck, modulo: 'preventa' },
+  { to: '/pedidos',            label: 'Pedidos',      icon: ShoppingCart,   modulo: 'preventa' },
+  { to: '/rendicion',          label: 'Rendiciones',  icon: CreditCard,     modulo: 'cobros' },
+  { to: '/admin/zonas',        label: 'Zonas',        icon: Map,            modulo: 'preventa' },
+  { to: '/admin/preventistas', label: 'Preventistas', icon: UserCog,        modulo: 'preventa' },
+  { to: '/admin/cobros',       label: 'Cobros',       icon: DollarSign,     modulo: 'cobros' },
+  { to: '/reportes',           label: 'Reportes',     icon: BarChart3,      modulo: 'reportes' },
+  { to: '/facturacion',        label: 'Facturación',  icon: FileText,       modulo: 'facturacion' },
+  { to: '/admin/suscripcion',  label: 'Suscripción',  icon: Settings },
 ]
 
 const PREVENTISTA_NAV: NavItem[] = [
   { to: '/',          label: 'Inicio',       icon: LayoutDashboard },
-  { to: '/ruta',      label: 'Mi ruta',      icon: Route },
-  { to: '/venta',     label: 'Nueva venta',  icon: ShoppingCart, primary: true },
-  { to: '/cobros',    label: 'Cobros',       icon: CreditCard },
-  { to: '/clientes',  label: 'Clientes',     icon: Users },
-  { to: '/pedidos',   label: 'Pedidos',      icon: FileText },
+  { to: '/ruta',      label: 'Mi ruta',      icon: Route,          modulo: 'preventa' },
+  { to: '/venta',     label: 'Nueva venta',  icon: ShoppingCart,   modulo: 'preventa', primary: true },
+  { to: '/cobros',    label: 'Cobros',       icon: CreditCard,     modulo: 'cobros' },
+  { to: '/clientes',  label: 'Clientes',     icon: Users,          modulo: 'preventa' },
+  { to: '/pedidos',   label: 'Pedidos',      icon: FileText,       modulo: 'preventa' },
 ]
 
 const DEPOSITO_NAV: NavItem[] = [
-  { to: '/',                    label: 'Dashboard',    icon: LayoutDashboard },
-  { to: '/deposito/preparacion', label: 'Preparación', icon: Package, primary: true },
-  { to: '/productos',           label: 'Stock',        icon: Warehouse },
+  { to: '/',                     label: 'Dashboard',   icon: LayoutDashboard },
+  { to: '/deposito/preparacion', label: 'Preparación', icon: Package,  modulo: 'deposito', primary: true },
+  { to: '/admin/productos',      label: 'Stock',       icon: Warehouse, modulo: 'stock' },
 ]
 
 const CHOFER_NAV: NavItem[] = [
-  { to: '/entregas',  label: 'Mis entregas', icon: Truck, primary: true },
-  { to: '/rendicion', label: 'Rendición',    icon: CreditCard },
+  { to: '/entregas',  label: 'Mis entregas', icon: Truck,        modulo: 'logistica', primary: true },
+  { to: '/rendicion', label: 'Rendición',    icon: CreditCard,   modulo: 'cobros' },
 ]
 
 export function getNavForRole(rol: RolUsuario | undefined | null): NavItem[] {

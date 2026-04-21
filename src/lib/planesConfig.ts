@@ -67,7 +67,7 @@ export const PLANES_META: Record<PlanKey, PlanMeta> = {
     precio_usd: 65,
     precio_label: 'USD 65',
     periodo: 'mes',
-    es_popular: true,
+    es_popular: false,
     features: [
       'Hasta 15 preventistas',
       'Zonas y clientes ilimitados',
@@ -84,7 +84,7 @@ export const PLANES_META: Record<PlanKey, PlanMeta> = {
     precio_usd: null,
     precio_label: 'A consultar',
     periodo: 'consultar',
-    es_popular: false,
+    es_popular: true,
     features: [
       'Preventistas ilimitados',
       'Múltiples depósitos / sucursales',

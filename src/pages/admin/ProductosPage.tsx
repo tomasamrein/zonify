@@ -62,6 +62,8 @@ export default function ProductosPage() {
             .from('productos')
             .select('*, categorias(nombre), unidades_medida(codigo)')
             .eq('empresa_id', empresaId)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .is('deleted_at' as any, null)
             .order('nombre'),
           supabase.from('categorias').select('*').eq('empresa_id', empresaId).eq('activo', true).order('nombre'),
           supabase.from('unidades_medida').select('*').eq('activo', true).order('nombre'),
@@ -143,12 +145,9 @@ export default function ProductosPage() {
   }
 
   async function eliminar(id: string) {
-    const { error } = await supabase.from('productos').delete().eq('id', id)
-    if (error) {
-      alert('No se puede eliminar: el producto tiene pedidos o movimientos asociados.')
-    } else {
-      cargar()
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await supabase.from('productos').update({ activo: false, deleted_at: new Date().toISOString() } as any).eq('id', id)
+    cargar()
     setConfirmarEliminarId(null)
   }
 

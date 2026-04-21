@@ -99,6 +99,8 @@ export default function ClientesPage() {
           .from('clientes')
           .select('*, zonas(nombre), perfiles(nombre_completo), listas_precios(nombre)')
           .eq('empresa_id', empresaId)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .is('deleted_at' as any, null)
           .order('razon_social'),
         supabase.from('zonas').select('id, nombre').eq('empresa_id', empresaId).eq('activo', true).order('nombre'),
         supabase
@@ -198,12 +200,9 @@ export default function ClientesPage() {
   }
 
   async function eliminar(id: string) {
-    const { error } = await supabase.from('clientes').delete().eq('id', id)
-    if (error) {
-      alert('No se puede eliminar: el cliente tiene pedidos o cobros asociados.')
-    } else {
-      cargar()
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await supabase.from('clientes').update({ activo: false, deleted_at: new Date().toISOString() } as any).eq('id', id)
+    cargar()
     setConfirmarEliminarId(null)
   }
 

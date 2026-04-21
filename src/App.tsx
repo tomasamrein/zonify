@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import LoginPage from '@/pages/LoginPage'
+import LandingPage from '@/pages/LandingPage'
 import RegistroPage from '@/pages/RegistroPage'
 import DashboardPage from '@/pages/DashboardPage'
 import MiRutaPage from '@/pages/MiRutaPage'
@@ -42,6 +43,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registro" element={<RegistroPage />} />
 

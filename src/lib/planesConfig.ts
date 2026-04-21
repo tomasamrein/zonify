@@ -1,4 +1,4 @@
-export type PlanKey = 'preventista' | 'completo' | 'facturacion'
+export type PlanKey = 'starter' | 'pro' | 'enterprise'
 
 export type Modulo =
   | 'preventa'
@@ -10,46 +10,114 @@ export type Modulo =
   | 'reportes'
 
 export const MODULOS_POR_PLAN: Record<PlanKey, Modulo[]> = {
-  preventista: ['preventa', 'cobros', 'stock', 'reportes'],
-  completo:    ['preventa', 'cobros', 'deposito', 'logistica', 'facturacion', 'stock', 'reportes'],
-  facturacion: ['facturacion', 'stock', 'reportes'],
+  starter:    ['preventa', 'cobros', 'stock', 'reportes'],
+  pro:        ['preventa', 'cobros', 'deposito', 'logistica', 'facturacion', 'stock', 'reportes'],
+  enterprise: ['preventa', 'cobros', 'deposito', 'logistica', 'facturacion', 'stock', 'reportes'],
 }
 
-export const PLANES_META: Record<PlanKey, {
+export interface PlanLimites {
+  max_preventistas: number | null  // null = ilimitado
+  max_zonas: number | null
+  max_clientes: number | null
+  max_productos: number | null
+}
+
+export const LIMITES_POR_PLAN: Record<PlanKey, PlanLimites> = {
+  starter:    { max_preventistas: 3,    max_zonas: 5,    max_clientes: 200,  max_productos: 300  },
+  pro:        { max_preventistas: 15,   max_zonas: null, max_clientes: null, max_productos: null },
+  enterprise: { max_preventistas: null, max_zonas: null, max_clientes: null, max_productos: null },
+}
+
+export interface PlanMeta {
   nombre: string
   descripcion: string
+  precio_usd: number | null   // null = a consultar
+  precio_label: string
+  periodo: 'mes' | 'consultar'
+  es_popular: boolean
   features: string[]
-}> = {
-  preventista: {
-    nombre: 'Preventista',
-    descripcion: 'Gestión de vendedores en calle y control de stock',
+  features_negadas?: string[]
+}
+
+export const PLANES_META: Record<PlanKey, PlanMeta> = {
+  starter: {
+    nombre: 'Starter',
+    descripcion: 'Para distribuidoras que arrancan a digitalizar su preventa.',
+    precio_usd: 25,
+    precio_label: 'USD 25',
+    periodo: 'mes',
+    es_popular: false,
     features: [
-      'Preventa y pedidos',
+      'Hasta 3 preventistas',
+      'Hasta 5 zonas',
+      'Preventa y pedidos offline',
       'Control de stock',
       'Cobros y rendición de caja',
-      'Gestión de clientes y zonas',
       'Reportes de ventas',
     ],
-  },
-  completo: {
-    nombre: 'Completo',
-    descripcion: 'Flujo completo: preventa → depósito → logística → facturación',
-    features: [
-      'Todo el plan Preventista',
-      'Depósito y preparación de pedidos',
-      'Logística y entregas (chofer)',
+    features_negadas: [
+      'Depósito y logística',
       'Hojas de ruta',
-      'Facturación y comprobantes',
+      'Facturación / remitos',
     ],
   },
-  facturacion: {
-    nombre: 'Facturación',
-    descripcion: 'Solo facturación, productos y control de stock',
+  pro: {
+    nombre: 'Pro',
+    descripcion: 'Flujo completo: preventa → depósito → logística → cobros.',
+    precio_usd: 65,
+    precio_label: 'USD 65',
+    periodo: 'mes',
+    es_popular: true,
     features: [
-      'Gestión de productos y precios',
-      'Control de stock',
-      'Facturación / comprobantes',
-      'Reportes de ventas',
+      'Hasta 15 preventistas',
+      'Zonas y clientes ilimitados',
+      'Todo el plan Starter',
+      'Depósito y preparación de pedidos',
+      'Hojas de ruta para choferes',
+      'Facturación / remitos PDF',
+      'Aprobación de pedidos por supervisor',
     ],
   },
+  enterprise: {
+    nombre: 'Enterprise',
+    descripcion: 'Para distribuidoras grandes con múltiples depósitos o sucursales.',
+    precio_usd: null,
+    precio_label: 'A consultar',
+    periodo: 'consultar',
+    es_popular: false,
+    features: [
+      'Preventistas ilimitados',
+      'Múltiples depósitos / sucursales',
+      'Todo el plan Pro',
+      'Integración ARCA / facturación fiscal',
+      'API de integración con ERP propio',
+      'Soporte prioritario con SLA',
+      'Capacitación y onboarding dedicado',
+    ],
+  },
+}
+
+// Mapeo de valores legacy en DB a los nuevos keys
+const PLAN_ALIAS: Record<string, PlanKey> = {
+  preventista: 'starter',
+  completo:    'pro',
+  facturacion: 'starter',
+  starter:     'starter',
+  pro:         'pro',
+  enterprise:  'enterprise',
+}
+
+export function normalizarPlan(planRaw: string | null | undefined): PlanKey {
+  return PLAN_ALIAS[planRaw ?? ''] ?? 'starter'
+}
+
+// Helper para usar en guards de features
+export function superaPlanLimite(
+  plan: PlanKey,
+  limite: keyof PlanLimites,
+  valorActual: number,
+): boolean {
+  const max = LIMITES_POR_PLAN[plan][limite]
+  if (max === null) return false
+  return valorActual >= max
 }

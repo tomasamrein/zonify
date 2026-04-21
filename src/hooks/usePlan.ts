@@ -1,10 +1,10 @@
 import { useAuthStore } from '@/store/useAuthStore'
-import { MODULOS_POR_PLAN, type Modulo, type PlanKey } from '@/lib/planesConfig'
+import { MODULOS_POR_PLAN, normalizarPlan, type Modulo } from '@/lib/planesConfig'
 
 export function usePlan() {
   const empresa = useAuthStore((s) => s.empresa)
-  const plan = (empresa?.plan ?? 'preventista') as PlanKey
-  const modulos = MODULOS_POR_PLAN[plan] ?? MODULOS_POR_PLAN.preventista
+  const plan = normalizarPlan(empresa?.plan)
+  const modulos = MODULOS_POR_PLAN[plan]
 
   return {
     plan,

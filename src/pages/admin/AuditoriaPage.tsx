@@ -11,9 +11,7 @@ interface MovimientoLog {
   cantidad: number
   stock_posterior: number
   motivo: string | null
-  usuario_id: string | null
   productos: { nombre: string; codigo_interno: string } | null
-  perfiles: { nombre_completo: string } | null
 }
 
 const TIPO_CONFIG: Record<string, { label: string; color: string; icon: typeof ArrowUpCircle }> = {
@@ -44,14 +42,11 @@ export default function AuditoriaPage() {
     if (!empresaId) return
     setCargando(true)
     setError(null)
-    let query = supabase
-      .from('movimientos_stock')
-      .select(`
-        id, created_at, tipo, cantidad, stock_posterior, motivo, usuario_id,
-        productos ( nombre, codigo_interno ),
-        perfiles ( nombre_completo )
-      `)
-      .eq('empresa_id', empresaId)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query = (supabase as any)
+      .from('stock_movimientos')
+      .select('id, created_at, tipo, cantidad, stock_posterior, motivo, productos(nombre, codigo_interno)')
+      .eq('productos.empresa_id', empresaId)
       .order('created_at', { ascending: false })
       .limit(200)
 
@@ -61,7 +56,7 @@ export default function AuditoriaPage() {
 
     const { data, error: err } = await query
     if (err) { setError(err.message); setCargando(false); return }
-    setMovimientos((data ?? []) as unknown as MovimientoLog[])
+    setMovimientos((data ?? []) as MovimientoLog[])
     setCargando(false)
   }, [empresaId, filtro])
 
@@ -129,7 +124,6 @@ export default function AuditoriaPage() {
                 <th className="text-left px-4 py-3 text-[var(--color-ink-muted)] font-medium">Producto</th>
                 <th className="text-center px-3 py-3 text-[var(--color-ink-muted)] font-medium">Cant.</th>
                 <th className="text-center px-3 py-3 text-[var(--color-ink-muted)] font-medium">Stock final</th>
-                <th className="text-left px-4 py-3 text-[var(--color-ink-muted)] font-medium hidden md:table-cell">Usuario</th>
                 <th className="text-left px-4 py-3 text-[var(--color-ink-muted)] font-medium hidden lg:table-cell">Motivo</th>
               </tr>
             </thead>
@@ -165,9 +159,6 @@ export default function AuditoriaPage() {
                     </td>
                     <td className="text-center px-3 py-2.5 text-[var(--color-ink-muted)]">
                       {m.stock_posterior}
-                    </td>
-                    <td className="px-4 py-2.5 text-[var(--color-ink-muted)] text-xs hidden md:table-cell">
-                      {m.perfiles?.nombre_completo ?? '—'}
                     </td>
                     <td className="px-4 py-2.5 text-[var(--color-ink-muted)] text-xs hidden lg:table-cell truncate max-w-[140px]">
                       {m.motivo ?? '—'}

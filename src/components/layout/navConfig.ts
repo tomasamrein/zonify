@@ -14,17 +14,20 @@ import {
   CreditCard,
   ClipboardCheck,
   Settings,
+  ShieldCheck,
+  Sparkles,
   type LucideIcon,
 } from 'lucide-react'
 import type { RolUsuario } from '@/types/database'
-import type { Modulo } from '@/lib/planesConfig'
+import type { Modulo, PlanKey } from '@/lib/planesConfig'
 
 export interface NavItem {
   to: string
   label: string
   icon: LucideIcon
   primary?: boolean
-  modulo?: Modulo // si está presente, el ítem solo aparece si la empresa tiene ese módulo
+  modulo?: Modulo
+  planMinimo?: PlanKey // oculto si el plan actual es inferior
 }
 
 const ADMIN_NAV: NavItem[] = [
@@ -41,6 +44,8 @@ const ADMIN_NAV: NavItem[] = [
   { to: '/admin/cobros',       label: 'Cobros',       icon: DollarSign,     modulo: 'cobros' },
   { to: '/reportes',           label: 'Reportes',     icon: BarChart3,      modulo: 'reportes' },
   { to: '/facturacion',        label: 'Facturación',  icon: FileText,       modulo: 'facturacion' },
+  { to: '/admin/auditoria',    label: 'Auditoría',    icon: ShieldCheck,    planMinimo: 'enterprise' },
+  { to: '/admin/asistente',    label: 'Asistente IA', icon: Sparkles,       planMinimo: 'enterprise' },
   { to: '/admin/suscripcion',  label: 'Suscripción',  icon: Settings },
 ]
 

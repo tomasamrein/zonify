@@ -11,11 +11,16 @@ import { useNotificaciones } from '@/hooks/useNotificaciones'
 
 export function AppLayout() {
   const { perfil } = useAuthStore()
-  const { tieneModulo } = usePlan()
+  const { tieneModulo, plan } = usePlan()
   useNotificaciones()
   const location = useLocation()
+  const PLAN_ORDEN: Record<string, number> = { starter: 0, pro: 1, enterprise: 2 }
   const allNav = getNavForRole(perfil?.rol)
-  const nav = allNav.filter((item) => !item.modulo || tieneModulo(item.modulo))
+  const nav = allNav.filter((item) => {
+    if (item.modulo && !tieneModulo(item.modulo)) return false
+    if (item.planMinimo && (PLAN_ORDEN[plan] ?? 0) < (PLAN_ORDEN[item.planMinimo] ?? 0)) return false
+    return true
+  })
   const current = nav.find((n) => n.to === location.pathname)
   const title = current?.label ?? 'Zonify'
   const { onTouchStart, onTouchEnd } = useSwipeNav(nav)

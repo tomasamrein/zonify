@@ -6,29 +6,14 @@ import { useAuthStore } from '@/store/useAuthStore'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { cn } from '@/lib/utils'
+import { PLANES_META, type PlanKey } from '@/lib/planesConfig'
 
-type PlanKey = 'preventista' | 'completo' | 'facturacion'
-
-const PLANES: { key: PlanKey; nombre: string; descripcion: string; features: string[] }[] = [
-  {
-    key: 'preventista',
-    nombre: 'Preventista',
-    descripcion: 'Para distribuidoras con vendedores en calle',
-    features: ['Preventa y pedidos', 'Control de stock', 'Cobros y rendición', 'Reportes'],
-  },
-  {
-    key: 'completo',
-    nombre: 'Completo',
-    descripcion: 'Flujo completo de distribución',
-    features: ['Todo el plan Preventista', 'Depósito y preparación', 'Logística y entregas', 'Facturación electrónica'],
-  },
-  {
-    key: 'facturacion',
-    nombre: 'Facturación',
-    descripcion: 'Solo facturación y gestión de stock',
-    features: ['Gestión de productos y precios', 'Control de stock', 'Facturación / comprobantes', 'Reportes de ventas'],
-  },
-]
+const PLANES_REGISTRO = (Object.keys(PLANES_META) as PlanKey[]).map((key) => ({
+  key,
+  nombre: PLANES_META[key].nombre,
+  descripcion: PLANES_META[key].descripcion,
+  features: PLANES_META[key].features,
+}))
 
 interface FormState {
   // Paso 1: empresa
@@ -54,7 +39,7 @@ const INITIAL: FormState = {
   codigo_admin: '',
   password: '',
   confirmar_password: '',
-  plan: 'preventista',
+  plan: 'starter',
 }
 
 export default function RegistroPage() {
@@ -318,7 +303,7 @@ export default function RegistroPage() {
                 Podés cambiarlo después desde la configuración.
               </p>
 
-              {PLANES.map((p) => (
+              {PLANES_REGISTRO.map((p) => (
                 <button
                   key={p.key}
                   type="button"

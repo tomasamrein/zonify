@@ -3,7 +3,18 @@ import { Check, X, Truck, PackageCheck, BarChart3, Wifi, ShieldCheck, Smartphone
 import { PLANES_META, MODULOS_POR_PLAN, type PlanKey, type Modulo } from '@/lib/planesConfig'
 
 const CONTACT = 'contacto@zonify.com.ar'
+const CALENDLY_URL = 'https://calendly.com/zonify/llamada'
 const PLANES: PlanKey[] = ['starter', 'pro', 'enterprise']
+
+function openCalendly(e: React.MouseEvent) {
+  e.preventDefault()
+  const w = window as unknown as { Calendly?: { initPopupWidget: (o: object) => void } }
+  if (w.Calendly) {
+    w.Calendly.initPopupWidget({ url: CALENDLY_URL })
+  } else {
+    window.open(CALENDLY_URL, '_blank')
+  }
+}
 const ALL_MODULOS: Modulo[] = ['preventa', 'cobros', 'deposito', 'logistica', 'facturacion', 'stock', 'reportes']
 const MODULOS_LABELS: Record<Modulo, string> = {
   preventa:    'Preventa y pedidos',
@@ -424,14 +435,77 @@ function Carrusel() {
 
 // ── Tabla de planes ───────────────────────────────────────────────────────────
 
+const ENTERPRISE_EXTRAS = [
+  'Auditoría avanzada (logs de precios y stock)',
+  'Asistente IA integrado',
+  'Soporte 1:1 por WhatsApp',
+  'Multi-sucursales / depósitos',
+  'Usuarios ilimitados',
+]
+
+function PlanCard({ planKey }: { planKey: PlanKey }) {
+  const meta = PLANES_META[planKey]
+  const modulos = MODULOS_POR_PLAN[planKey]
+  return (
+    <div className={`rounded-2xl border-2 p-5 flex flex-col gap-4 ${meta.es_popular ? 'border-blue-500 shadow-lg shadow-blue-100' : 'border-gray-200'}`}>
+      <div>
+        {meta.es_popular && (
+          <span className="inline-block bg-blue-600 text-white text-xs font-semibold px-3 py-0.5 rounded-full mb-2">Recomendado</span>
+        )}
+        <h3 className={`text-xl font-bold ${meta.es_popular ? 'text-blue-600' : 'text-gray-900'}`}>{meta.nombre}</h3>
+        <p className="text-sm text-gray-500 mt-1">{meta.descripcion}</p>
+      </div>
+      <ul className="space-y-2 flex-1">
+        {ALL_MODULOS.map((mod) => {
+          const tiene = modulos.includes(mod)
+          return (
+            <li key={mod} className="flex items-center gap-2 text-sm">
+              {tiene
+                ? <Check className="w-4 h-4 text-green-500 shrink-0" />
+                : <X className="w-4 h-4 text-gray-200 shrink-0" />}
+              <span className={tiene ? 'text-gray-700' : 'text-gray-300'}>{MODULOS_LABELS[mod]}</span>
+            </li>
+          )
+        })}
+        <li className="flex items-center gap-2 text-sm">
+          <Check className="w-4 h-4 text-blue-500 shrink-0" />
+          <span className="text-gray-700 font-medium">Capacitación online incluida</span>
+        </li>
+        {planKey === 'enterprise' && ENTERPRISE_EXTRAS.map((f) => (
+          <li key={f} className="flex items-center gap-2 text-sm">
+            <Check className="w-4 h-4 text-green-500 shrink-0" />
+            <span className="text-gray-700">{f}</span>
+          </li>
+        ))}
+      </ul>
+      <button
+        onClick={openCalendly}
+        className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+          meta.es_popular
+            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+        }`}
+      >
+        Consultar plan {meta.nombre}
+      </button>
+    </div>
+  )
+}
+
 function TablaPlanes() {
   return (
-    <div className="max-w-4xl mx-auto px-4">
-      <div className="rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+    <div className="max-w-5xl mx-auto px-4">
+      {/* Mobile: cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:hidden">
+        {PLANES.map((p) => <PlanCard key={p} planKey={p} />)}
+      </div>
+
+      {/* Desktop: comparison table */}
+      <div className="hidden md:block rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 bg-gray-50">
-              <th className="text-left px-5 py-4 text-gray-500 font-medium">Incluye</th>
+              <th className="text-left px-5 py-4 text-gray-500 font-medium w-2/5">Incluye</th>
               {PLANES.map((p) => {
                 const meta = PLANES_META[p]
                 return (
@@ -463,7 +537,6 @@ function TablaPlanes() {
                 })}
               </tr>
             ))}
-            {/* Capacitación — todos los planes */}
             <tr className="border-b border-gray-100 bg-blue-50/30">
               <td className="px-5 py-3 text-gray-700 font-medium">Capacitación online incluida</td>
               {PLANES.map((p) => (
@@ -472,14 +545,7 @@ function TablaPlanes() {
                 </td>
               ))}
             </tr>
-            {/* Exclusivos Enterprise */}
-            {[
-              'Auditoría avanzada (logs de precios y stock)',
-              'Asistente IA integrado',
-              'Soporte 1:1 por WhatsApp',
-              'Multi-sucursales / depósitos',
-              'Usuarios ilimitados',
-            ].map((f) => (
+            {ENTERPRISE_EXTRAS.map((f) => (
               <tr key={f} className="border-b border-gray-100">
                 <td className="px-5 py-3 text-gray-700">{f}</td>
                 <td className="text-center px-4 py-3"><X className="w-4 h-4 text-gray-200 mx-auto" /></td>
@@ -491,16 +557,16 @@ function TablaPlanes() {
               <td className="px-5 py-4" />
               {PLANES.map((p) => (
                 <td key={p} className="text-center px-4 py-4">
-                  <a
-                    href={`mailto:${CONTACT}?subject=Consulta plan ${PLANES_META[p].nombre}`}
-                    className={`inline-block text-sm font-semibold px-4 py-2 rounded-xl transition-colors ${
+                  <button
+                    onClick={openCalendly}
+                    className={`text-sm font-semibold px-4 py-2 rounded-xl transition-colors ${
                       PLANES_META[p].es_popular
                         ? 'bg-blue-600 hover:bg-blue-700 text-white'
                         : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                     }`}
                   >
                     Consultar
-                  </a>
+                  </button>
                 </td>
               ))}
             </tr>
@@ -514,18 +580,33 @@ function TablaPlanes() {
 // ── Página ────────────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
+  useEffect(() => {
+    if (!document.querySelector('link[href*="calendly"]')) {
+      const link = document.createElement('link')
+      link.href = 'https://assets.calendly.com/assets/external/widget.css'
+      link.rel = 'stylesheet'
+      document.head.appendChild(link)
+    }
+    if (!document.querySelector('script[src*="calendly"]')) {
+      const script = document.createElement('script')
+      script.src = 'https://assets.calendly.com/assets/external/widget.js'
+      script.async = true
+      document.head.appendChild(script)
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-white text-gray-900">
       {/* Nav */}
       <nav className="border-b border-gray-100 sticky top-0 bg-white/90 backdrop-blur z-10">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <span className="text-xl font-bold text-blue-600">Zonify</span>
-          <a
-            href={`mailto:${CONTACT}`}
+          <button
+            onClick={openCalendly}
             className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
           >
             Agendar llamada
-          </a>
+          </button>
         </div>
       </nav>
 
@@ -543,12 +624,12 @@ export default function LandingPage() {
           Sin papel, sin llamadas innecesarias, sin perder ventas por falta de stock.
         </p>
         <p className="text-sm text-gray-400 mb-10">Diseñado para ser usado desde el primer día, sin capacitación técnica.</p>
-        <a
-          href={`mailto:${CONTACT}?subject=Quiero conocer Zonify`}
+        <button
+          onClick={openCalendly}
           className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-blue-200"
         >
           Agendar una llamada gratuita
-        </a>
+        </button>
 
         {/* Tech badges */}
         <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
@@ -677,12 +758,12 @@ export default function LandingPage() {
           Agendá una llamada de 30 minutos. Te mostramos el sistema funcionando con datos reales de tu rubro.
         </p>
         <p className="text-blue-300 text-sm mb-8">Sin compromisos. Sin presentaciones genéricas.</p>
-        <a
-          href={`mailto:${CONTACT}?subject=Quiero conocer Zonify`}
+        <button
+          onClick={openCalendly}
           className="inline-block bg-white text-blue-600 font-bold px-8 py-3.5 rounded-2xl hover:bg-blue-50 transition-colors"
         >
-          Escribinos a {CONTACT}
-        </a>
+          Agendar llamada gratuita
+        </button>
       </section>
 
       {/* Footer */}

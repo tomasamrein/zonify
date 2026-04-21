@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Pencil, RefreshCw, AlertCircle, Info, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
+import { usePlan } from '@/hooks/usePlan'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
@@ -39,6 +40,7 @@ interface Form {
 export default function UsuariosPage() {
   const empresaId = useAuthStore((s) => s.empresaId)
   const userId    = useAuthStore((s) => s.user?.id)
+  const { superaLimite, limites } = usePlan()
   const [perfiles, setPerfiles]   = useState<Perfil[]>([])
   const [zonas, setZonas]         = useState<Zona[]>([])
   const [cargando, setCargando]   = useState(true)
@@ -97,6 +99,13 @@ export default function UsuariosPage() {
 
   async function guardar() {
     if (!editando) return
+    if (form.rol === 'preventista' && editando.rol !== 'preventista') {
+      const cantPreventistas = perfiles.filter((p) => p.rol === 'preventista' && p.activo).length
+      if (superaLimite('max_preventistas', cantPreventistas)) {
+        setFormError(`Tu plan permite hasta ${limites.max_preventistas} preventistas activos. Actualizá tu plan para agregar más.`)
+        return
+      }
+    }
     setGuardando(true)
     setFormError(null)
     try {

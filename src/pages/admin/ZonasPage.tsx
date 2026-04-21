@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Plus, Pencil, Map, Search, RefreshCw, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
+import { usePlan } from '@/hooks/usePlan'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
@@ -30,6 +31,7 @@ const DIAS: { value: DiaSemana; label: string }[] = [
 
 export default function ZonasPage() {
   const empresaId = useAuthStore((s) => s.empresaId)
+  const { superaLimite, limites } = usePlan()
   const [zonas, setZonas]         = useState<Zona[]>([])
   const [cargando, setCargando]   = useState(true)
   const [error, setError]         = useState<string | null>(null)
@@ -62,6 +64,10 @@ export default function ZonasPage() {
   useEffect(() => { cargar() }, [cargar])
 
   function abrirCrear() {
+    if (superaLimite('max_zonas', zonas.length)) {
+      setError(`Tu plan permite hasta ${limites.max_zonas} zonas. Actualizá tu plan para agregar más.`)
+      return
+    }
     setEditando(null)
     setForm(EMPTY)
     setFormError(null)

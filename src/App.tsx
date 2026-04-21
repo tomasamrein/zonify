@@ -18,6 +18,8 @@ import AdminPreciosPage from '@/pages/admin/PreciosPage'
 import SuscripcionPage from '@/pages/admin/SuscripcionPage'
 import CobrosAdminPage from '@/pages/admin/CobrosAdminPage'
 import StockPage from '@/pages/admin/StockPage'
+import AuditoriaPage from '@/pages/admin/AuditoriaPage'
+import AsistenteIAPage from '@/pages/admin/AsistenteIAPage'
 import ReportesPage from '@/pages/ReportesPage'
 import CobrosPage from '@/pages/CobrosPage'
 import RendicionPage from '@/pages/RendicionPage'
@@ -36,6 +38,12 @@ import EmpresasPage from '@/pages/superadmin/EmpresasPage'
 function PlanRoute({ modulo, children }: { modulo: Modulo; children: React.ReactNode }) {
   const { tieneModulo } = usePlan()
   if (!tieneModulo(modulo)) return <ModuloBloqueado planRequerido="pro" />
+  return <>{children}</>
+}
+
+function EnterpriseRoute({ children }: { children: React.ReactNode }) {
+  const { plan } = usePlan()
+  if (plan !== 'enterprise') return <ModuloBloqueado planRequerido="enterprise" />
   return <>{children}</>
 }
 
@@ -73,6 +81,8 @@ export default function App() {
             <Route path="/admin/stock"        element={<StockPage />} />
             <Route path="/admin/suscripcion"  element={<SuscripcionPage />} />
             <Route path="/admin/cobros"       element={<CobrosAdminPage />} />
+            <Route path="/admin/auditoria"    element={<EnterpriseRoute><AuditoriaPage /></EnterpriseRoute>} />
+            <Route path="/admin/asistente"    element={<EnterpriseRoute><AsistenteIAPage /></EnterpriseRoute>} />
           </Route>
         </Route>
 

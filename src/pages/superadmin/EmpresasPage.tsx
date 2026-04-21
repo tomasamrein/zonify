@@ -19,9 +19,9 @@ interface EmpresaRow {
 }
 
 const PLAN_BADGE: Record<string, string> = {
-  preventista: 'bg-blue-900 text-blue-200',
-  completo:    'bg-brand-900 text-brand-200',
-  facturacion: 'bg-emerald-900 text-emerald-200',
+  starter:    'bg-blue-900 text-blue-200',
+  pro:        'bg-brand-900 text-brand-200',
+  enterprise: 'bg-emerald-900 text-emerald-200',
 }
 
 export default function EmpresasPage() {

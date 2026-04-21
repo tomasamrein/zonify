@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Plus, Pencil, Package, Search, RefreshCw, AlertCircle, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
+import { usePlan } from '@/hooks/usePlan'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
@@ -38,6 +39,7 @@ function formatARS(n: number) {
 
 export default function ProductosPage() {
   const empresaId = useAuthStore((s) => s.empresaId)
+  const { superaLimite, limites } = usePlan()
   const [productos, setProductos] = useState<ProductoRow[]>([])
   const [categorias, setCategorias] = useState<Categoria[]>([])
   const [unidades, setUnidades] = useState<UnidadMedida[]>([])
@@ -111,6 +113,10 @@ export default function ProductosPage() {
     if (!empresaId) return
     if (!form.codigo_interno.trim() || !form.nombre.trim() || !form.unidad_medida_id) {
       setFormError('Código, nombre y unidad de medida son obligatorios.')
+      return
+    }
+    if (!editando && superaLimite('max_productos', productos.length)) {
+      setFormError(`Tu plan permite hasta ${limites.max_productos} productos. Actualizá tu plan para agregar más.`)
       return
     }
     setGuardando(true)

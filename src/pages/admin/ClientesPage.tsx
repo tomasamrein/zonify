@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Plus, Pencil, Users, Search, RefreshCw, AlertCircle, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
+import { usePlan } from '@/hooks/usePlan'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
@@ -70,6 +71,7 @@ function formatARS(n: number) {
 
 export default function ClientesPage() {
   const empresaId = useAuthStore((s) => s.empresaId)
+  const { superaLimite, limites } = usePlan()
   const [clientes, setClientes]         = useState<ClienteRow[]>([])
   const [zonas, setZonas]               = useState<ZonaOption[]>([])
   const [preventistas, setPreventistas] = useState<PerfilOption[]>([])
@@ -160,6 +162,10 @@ export default function ClientesPage() {
     if (!empresaId) return
     if (!form.razon_social.trim()) {
       setFormError('La razón social es obligatoria.')
+      return
+    }
+    if (!editando && superaLimite('max_clientes', clientes.length)) {
+      setFormError(`Tu plan permite hasta ${limites.max_clientes} clientes. Actualizá tu plan para agregar más.`)
       return
     }
     setGuardando(true)

@@ -100,16 +100,30 @@ interface ProductoRowProps {
 }
 
 const ProductoRow = memo(function ProductoRow({ producto: p, cantidad: cant, onMas, onMenos }: ProductoRowProps) {
+  const sinStock = p.stock_actual <= 0
+  const maxAlcanzado = cant >= p.stock_actual
+  const stockBajo = p.stock_actual > 0 && p.stock_actual <= p.stock_minimo
+
   return (
     <div
       className={cn(
         'bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-4 py-3 flex items-center gap-3 shadow-[var(--shadow-card)]',
         cant > 0 && 'border-brand-300 bg-brand-50/40',
+        sinStock && 'opacity-60',
       )}
     >
       <div className="flex-1 min-w-0">
         <p className="font-medium text-[var(--color-ink)] text-sm leading-tight truncate">{p.nombre}</p>
-        <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">{p.codigo_interno}</p>
+        <div className="flex items-center gap-2 mt-0.5">
+          <p className="text-xs text-[var(--color-ink-muted)]">{p.codigo_interno}</p>
+          {sinStock ? (
+            <span className="text-xs font-medium text-red-600">Sin stock</span>
+          ) : (
+            <span className={cn('text-xs', stockBajo ? 'text-amber-600 font-medium' : 'text-[var(--color-ink-muted)]')}>
+              Stock: {p.stock_actual}
+            </span>
+          )}
+        </div>
       </div>
       <p className="text-sm font-semibold text-brand-700 shrink-0">
         {formatMoneda(p.precio!)}
@@ -126,7 +140,8 @@ const ProductoRow = memo(function ProductoRow({ producto: p, cantidad: cant, onM
             <span className="w-8 text-center text-sm font-semibold tabular-nums">{cant}</span>
             <button
               onClick={() => onMas(p)}
-              className="w-8 h-8 rounded-lg bg-brand-600 hover:bg-brand-700 text-white flex items-center justify-center transition-colors"
+              disabled={maxAlcanzado}
+              className="w-8 h-8 rounded-lg bg-brand-600 hover:bg-brand-700 text-white flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -134,7 +149,8 @@ const ProductoRow = memo(function ProductoRow({ producto: p, cantidad: cant, onM
         ) : (
           <button
             onClick={() => onMas(p)}
-            className="w-8 h-8 rounded-lg bg-brand-600 hover:bg-brand-700 text-white flex items-center justify-center transition-colors"
+            disabled={sinStock}
+            className="w-8 h-8 rounded-lg bg-brand-600 hover:bg-brand-700 text-white flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>
@@ -188,6 +204,7 @@ function Catalogo({ clienteNombre, onCambiarCliente, onConfirmar }: CatalogoProp
   const handleMas = useCallback((p: ProductoConPrecio) => {
     const { carrito: c, agregarAlCarrito: add, actualizarCantidad: update } = useVentasStore.getState()
     const cant = c.find((i) => i.producto_id === p.id)?.cantidad ?? 0
+    if (cant >= p.stock_actual) return
     if (cant === 0) add(p, 1)
     else update(p.id, cant + 1)
   }, [])

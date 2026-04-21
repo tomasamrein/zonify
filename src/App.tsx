@@ -35,7 +35,7 @@ import EmpresasPage from '@/pages/superadmin/EmpresasPage'
 
 function PlanRoute({ modulo, children }: { modulo: Modulo; children: React.ReactNode }) {
   const { tieneModulo } = usePlan()
-  if (!tieneModulo(modulo)) return <ModuloBloqueado planRequerido="completo" />
+  if (!tieneModulo(modulo)) return <ModuloBloqueado planRequerido="pro" />
   return <>{children}</>
 }
 

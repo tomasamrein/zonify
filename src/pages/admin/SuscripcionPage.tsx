@@ -14,17 +14,17 @@ const MODULOS_LABELS: Record<Modulo, string> = {
 }
 
 const PLAN_COLORS: Record<PlanKey, string> = {
-  preventista: 'bg-blue-50 border-blue-200 text-blue-700',
-  completo:    'bg-brand-50 border-brand-200 text-brand-700',
-  facturacion: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+  starter:    'bg-blue-50 border-blue-200 text-blue-700',
+  pro:        'bg-brand-50 border-brand-200 text-brand-700',
+  enterprise: 'bg-emerald-50 border-emerald-200 text-emerald-700',
 }
 
-const ALL_PLANES: PlanKey[] = ['preventista', 'completo', 'facturacion']
+const ALL_PLANES: PlanKey[] = ['starter', 'pro', 'enterprise']
 const ALL_MODULOS: Modulo[] = ['preventa', 'cobros', 'deposito', 'logistica', 'facturacion', 'stock', 'reportes']
 
 export default function SuscripcionPage() {
   const empresa = useAuthStore((s) => s.empresa)
-  const planActual = (empresa?.plan && empresa.plan in PLANES_META ? empresa.plan : 'preventista') as PlanKey
+  const planActual = (empresa?.plan && empresa.plan in PLANES_META ? empresa.plan : 'starter') as PlanKey
   const meta = PLANES_META[planActual]
 
   return (

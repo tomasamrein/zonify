@@ -1,0 +1,27 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2E3192;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e1f5f;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Logo Z circle -->
+  <circle cx="150" cy="150" r="100" fill="#FFFFFF" opacity="0.15"/>
+  <text x="150" y="170" font-size="120" font-weight="bold" fill="#FFFFFF" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">Z</text>
+
+  <!-- Main text -->
+  <text x="600" y="220" font-size="72" font-weight="bold" fill="#FFFFFF" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">Zonify</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="320" font-size="40" fill="#E0E7FF" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">Software para distribuidoras mayoristas</text>
+
+  <!-- Description -->
+  <text x="600" y="400" font-size="28" fill="#C7D2FE" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">Preventa • Stock • Logística • Offline-first</text>
+
+  <!-- Bottom accent -->
+  <rect x="200" y="550" width="800" height="4" fill="#FFFFFF" opacity="0.3" rx="2"/>
+</svg>

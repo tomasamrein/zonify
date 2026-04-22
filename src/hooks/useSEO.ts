@@ -7,7 +7,7 @@ interface SEOConfig {
   url?: string
 }
 
-export function useSEO({ title = 'Zonify — Software para distribuidoras mayoristas', description = 'Plataforma SaaS offline-first para preventa, stock y logística', image = '/og-image.png', url = 'https://zonify.com.ar' }: SEOConfig = {}) {
+export function useSEO({ title = 'Zonify — Software para distribuidoras mayoristas', description = 'Plataforma SaaS offline-first para preventa, stock y logística', image = '/og-image.svg', url = 'https://zonify.com.ar' }: SEOConfig = {}) {
   useEffect(() => {
     document.title = title
 

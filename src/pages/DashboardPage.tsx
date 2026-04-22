@@ -86,11 +86,11 @@ function DashboardAdmin() {
       setCargando(true)
       try {
         const [pedidosHoyRes, pedidosRecientesRes, clientesRes, productosRes, pendientesRes] = await Promise.all([
-          supabase.from('pedidos').select('id, total').gte('fecha_pedido', hoyIso),
-          supabase.from('pedidos').select('id, numero_pedido, total, estado, fecha_pedido, clientes(razon_social)').order('fecha_pedido', { ascending: false }).limit(5),
+          supabase.from('pedidos').select('id, total').eq('empresa_id', empresaId!).gte('fecha_pedido', hoyIso),
+          supabase.from('pedidos').select('id, numero_pedido, total, estado, fecha_pedido, clientes(razon_social)').eq('empresa_id', empresaId!).order('fecha_pedido', { ascending: false }).limit(5),
           supabase.from('clientes').select('id', { count: 'exact', head: true }).eq('empresa_id', empresaId!).eq('activo', true),
           supabase.from('productos').select('nombre, stock_actual, stock_minimo').eq('empresa_id', empresaId!).eq('activo', true),
-          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('estado', 'pendiente'),
+          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('empresa_id', empresaId!).eq('estado', 'pendiente'),
         ])
         const pedidosHoy = pedidosHoyRes.data ?? []
         const criticos = (productosRes.data ?? []).filter((p) => p.stock_actual <= p.stock_minimo).sort((a, b) => a.stock_actual - b.stock_actual).slice(0, 5)
@@ -204,10 +204,10 @@ function DashboardDeposito() {
       setCargando(true)
       try {
         const [confirmRes, factRes, productosRes, pedidosRes] = await Promise.all([
-          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('estado', 'confirmado'),
-          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('estado', 'facturado'),
+          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('empresa_id', empresaId!).eq('estado', 'confirmado'),
+          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('empresa_id', empresaId!).eq('estado', 'facturado'),
           supabase.from('productos').select('stock_actual, stock_minimo').eq('empresa_id', empresaId!).eq('activo', true),
-          supabase.from('pedidos').select('id, numero_pedido, total, estado, fecha_pedido, clientes(razon_social)').in('estado', ['confirmado', 'facturado']).order('fecha_pedido', { ascending: true }).limit(8),
+          supabase.from('pedidos').select('id, numero_pedido, total, estado, fecha_pedido, clientes(razon_social)').eq('empresa_id', empresaId!).in('estado', ['confirmado', 'facturado']).order('fecha_pedido', { ascending: true }).limit(8),
         ])
         const stockCritico = (productosRes.data ?? []).filter((p) => p.stock_actual <= p.stock_minimo).length
         setStats({ aPreparar: confirmRes.count ?? 0, listosParaCamion: factRes.count ?? 0, stockCritico })
@@ -269,9 +269,9 @@ function DashboardChofer() {
       setCargando(true)
       try {
         const [pendRes, entregRes, cobrosRes] = await Promise.all([
-          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('estado', 'facturado'),
-          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('estado', 'entregado').gte('fecha_pedido', hoyIso),
-          supabase.from('cobros').select('monto').eq('preventista_id', perfil!.id).eq('fecha', hoy),
+          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('empresa_id', empresaId!).eq('estado', 'facturado'),
+          supabase.from('pedidos').select('id', { count: 'exact', head: true }).eq('empresa_id', empresaId!).eq('estado', 'entregado').gte('fecha_pedido', hoyIso),
+          supabase.from('cobros').select('monto').eq('empresa_id', empresaId!).eq('preventista_id', perfil!.id).eq('fecha', hoy),
         ])
         const cobradoHoy = (cobrosRes.data ?? []).reduce((s, c) => s + Number(c.monto), 0)
         setStats({ pendientes: pendRes.count ?? 0, entregadosHoy: entregRes.count ?? 0, cobradoHoy })

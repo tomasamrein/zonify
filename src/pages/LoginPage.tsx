@@ -135,10 +135,6 @@ export default function LoginPage() {
             {modoEmail ? 'Volver al login de distribuidora' : 'Acceso de administrador'}
           </button>
         </p>
-        <p className="text-center text-xs text-[var(--color-ink-muted)] mt-2">
-          ¿Empresa nueva?{' '}
-          <a href="/registro" className="text-brand-600 hover:underline">Registrá tu distribuidora</a>
-        </p>
       </div>
     </div>
   )

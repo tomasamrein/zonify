@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Wifi, WifiOff, Bell } from 'lucide-react'
 import { Avatar } from '@/components/ui/Avatar'
+import { ZonifyLogo } from '@/components/ui/ZonifyLogo'
 import { useAuthStore } from '@/store/useAuthStore'
 import { cn } from '@/lib/utils'
 
@@ -28,9 +29,7 @@ export function Header({ title }: HeaderProps) {
       <div className="h-14 lg:h-16 px-4 lg:px-8 flex items-center justify-between gap-4">
         {/* Mobile logo / title */}
         <div className="flex items-center gap-2.5 lg:hidden">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">
-            Z
-          </div>
+          <ZonifyLogo size={32} />
           <div className="flex flex-col leading-tight">
             <p className="text-base font-semibold leading-none">{title ?? 'Zonify'}</p>
             {empresa && (

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Check, X, Truck, PackageCheck, BarChart3, Wifi, ShieldCheck, Smartphone, ChevronLeft, ChevronRight, Clock, AlertTriangle, MessageSquareX, FolderX } from 'lucide-react'
 import { PLANES_META, MODULOS_POR_PLAN, type PlanKey, type Modulo } from '@/lib/planesConfig'
+import { ZonifyLogo } from '@/components/ui/ZonifyLogo'
 
 const CONTACT = 'contacto@zonify.com.ar'
 const CALENDLY_URL = 'https://calendly.com/zonify/llamada'
@@ -33,7 +34,7 @@ function MockupDashboard() {
     <div className="w-full h-full bg-[#f8f9fb] p-3 flex flex-col gap-2">
       <div className="flex gap-2">
         {[
-          { label: 'Ventas hoy', value: '$284.500', color: 'bg-blue-500', sub: '+8% vs ayer' },
+          { label: 'Ventas hoy', value: '$284.500', color: 'bg-[#2E3192]', sub: '+8% vs ayer' },
           { label: 'Pedidos', value: '23', color: 'bg-emerald-500', sub: '18 entregados' },
           { label: 'Cobros', value: '$198.000', color: 'bg-violet-500', sub: '12 clientes' },
           { label: 'Stock bajo', value: '4 prod.', color: 'bg-amber-500', sub: 'requieren ingreso' },
@@ -62,8 +63,8 @@ function MockupDashboard() {
             ].map((d, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-0.5 h-full justify-end">
                 <p className="text-[7px] text-gray-400">{d.val}</p>
-                <div className="w-full bg-blue-100 rounded-t-sm relative" style={{ height: `${d.h}%` }}>
-                  <div className="absolute bottom-0 w-full bg-blue-500 rounded-t-sm" style={{ height: '100%' }} />
+                <div className="w-full bg-[#2E3192]/15 rounded-t-sm relative" style={{ height: `${d.h}%` }}>
+                  <div className="absolute bottom-0 w-full bg-[#2E3192] rounded-t-sm" style={{ height: '100%' }} />
                 </div>
                 <p className="text-[8px] text-gray-300">{d.label}</p>
               </div>
@@ -85,7 +86,7 @@ function MockupDashboard() {
                   <p className="text-[9px] font-semibold text-gray-700">{p.monto}</p>
                 </div>
                 <div className="h-1 bg-gray-100 rounded-full">
-                  <div className="h-1 bg-blue-400 rounded-full" style={{ width: `${p.pct}%` }} />
+                  <div className="h-1 bg-[#2E3192]/70 rounded-full" style={{ width: `${p.pct}%` }} />
                 </div>
               </div>
             ))}
@@ -103,11 +104,11 @@ function MockupDashboard() {
             { cliente: 'Distribuidora Roma', prev: 'Martín G.', total: '$21.600', estado: 'entregado' },
           ].map((v) => (
             <div key={v.cliente} className="flex items-center gap-2">
-              <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${v.estado === 'entregado' ? 'bg-green-500' : v.estado === 'en_camino' ? 'bg-blue-500' : 'bg-amber-400'}`} />
+              <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${v.estado === 'entregado' ? 'bg-green-500' : v.estado === 'en_camino' ? 'bg-zonify-accent' : 'bg-amber-400'}`} />
               <p className="text-[9px] text-gray-700 flex-1 truncate">{v.cliente}</p>
               <p className="text-[8px] text-gray-400 hidden sm:block">{v.prev}</p>
               <p className="text-[9px] font-semibold text-gray-800">{v.total}</p>
-              <span className={`text-[7px] font-semibold px-1 py-0.5 rounded ${v.estado === 'entregado' ? 'bg-green-50 text-green-700' : v.estado === 'en_camino' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'}`}>
+              <span className={`text-[7px] font-semibold px-1 py-0.5 rounded ${v.estado === 'entregado' ? 'bg-green-50 text-green-700' : v.estado === 'en_camino' ? 'bg-zonify-bg text-zonify-blue' : 'bg-amber-50 text-amber-700'}`}>
                 {v.estado === 'entregado' ? 'Entregado' : v.estado === 'en_camino' ? 'En camino' : 'Preparando'}
               </span>
             </div>
@@ -126,7 +127,7 @@ function MockupCatalogo() {
           <div className="w-3 h-3 rounded-full border border-gray-300" />
           <p className="text-[10px] text-gray-400">Buscar producto...</p>
         </div>
-        <div className="bg-blue-50 text-blue-700 text-[9px] font-semibold px-2 py-1.5 rounded-lg border border-blue-200 shrink-0">
+        <div className="bg-zonify-bg text-[#2E3192] text-[9px] font-semibold px-2 py-1.5 rounded-lg border border-[#2E3192]/20 shrink-0">
           La Esquina S.A.
         </div>
       </div>
@@ -139,7 +140,7 @@ function MockupCatalogo() {
           { nombre: 'Cerveza Lata 473ml x24', cod: 'CE-012', precio: '$5.400', stock: 3, enCarrito: 0 },
           { nombre: 'Soda Limón 1.5L x6', cod: 'SD-004', precio: '$1.200', stock: 88, enCarrito: 5 },
         ].map((p) => (
-          <div key={p.cod} className={`bg-white rounded-xl px-3 py-2 border flex items-center gap-2 shadow-sm ${p.enCarrito > 0 ? 'border-blue-300 bg-blue-50/40' : 'border-gray-100'}`}>
+          <div key={p.cod} className={`bg-white rounded-xl px-3 py-2 border flex items-center gap-2 shadow-sm ${p.enCarrito > 0 ? 'border-[#2E3192]/30 bg-zonify-bg/60' : 'border-gray-100'}`}>
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-semibold text-gray-800 truncate">{p.nombre}</p>
               <div className="flex items-center gap-2">
@@ -147,21 +148,21 @@ function MockupCatalogo() {
                 <p className={`text-[8px] ${p.stock <= 10 ? 'text-amber-600 font-medium' : 'text-gray-400'}`}>Stock: {p.stock}</p>
               </div>
             </div>
-            <p className="text-[10px] font-bold text-blue-700 shrink-0">{p.precio}</p>
+            <p className="text-[10px] font-bold text-[#2E3192] shrink-0">{p.precio}</p>
             {p.enCarrito > 0 ? (
               <div className="flex items-center gap-1 shrink-0">
                 <div className="w-5 h-5 rounded-md bg-gray-100 flex items-center justify-center"><span className="text-[9px]">−</span></div>
                 <span className="text-[10px] font-bold w-3 text-center">{p.enCarrito}</span>
-                <div className="w-5 h-5 rounded-md bg-blue-600 flex items-center justify-center"><span className="text-[9px] text-white">+</span></div>
+                <div className="w-5 h-5 rounded-md bg-[#2E3192] flex items-center justify-center"><span className="text-[9px] text-white">+</span></div>
               </div>
             ) : (
-              <div className="w-5 h-5 rounded-md bg-blue-600 flex items-center justify-center shrink-0"><span className="text-[9px] text-white">+</span></div>
+              <div className="w-5 h-5 rounded-md bg-[#2E3192] flex items-center justify-center shrink-0"><span className="text-[9px] text-white">+</span></div>
             )}
           </div>
         ))}
       </div>
 
-      <div className="bg-blue-600 rounded-xl px-3 py-2.5 flex items-center justify-between">
+      <div className="bg-[#2E3192] rounded-xl px-3 py-2.5 flex items-center justify-between">
         <div>
           <p className="text-[10px] text-white font-semibold">10 productos · $18.850</p>
           <p className="text-[8px] text-blue-200">IVA incluido</p>
@@ -182,7 +183,7 @@ function MockupStock() {
         </div>
         <div className="flex gap-1.5">
           <div className="bg-amber-50 text-amber-700 text-[9px] font-semibold px-2 py-1 rounded-lg border border-amber-200">4 alertas</div>
-          <div className="bg-blue-600 text-white text-[9px] font-semibold px-2 py-1 rounded-lg">+ Ingreso</div>
+          <div className="bg-[#2E3192] text-white text-[9px] font-semibold px-2 py-1 rounded-lg">+ Ingreso</div>
         </div>
       </div>
 
@@ -207,7 +208,7 @@ function MockupStock() {
             <div className={`text-[7px] font-semibold px-1.5 py-0.5 rounded-full w-fit ${r.ok ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
               {r.ok ? 'OK' : 'Bajo'}
             </div>
-            <div className="text-blue-500 text-[9px] font-medium cursor-pointer">+</div>
+            <div className="text-[#2E3192] text-[9px] font-medium cursor-pointer">+</div>
           </div>
         ))}
       </div>
@@ -244,7 +245,7 @@ function MockupReportes() {
         <p className="text-xs font-bold text-gray-700">Reportes de Ventas</p>
         <div className="flex gap-1">
           {['Semana', 'Mes', 'Año'].map((t, i) => (
-            <button key={t} className={`text-[8px] font-semibold px-2 py-0.5 rounded-md ${i === 1 ? 'bg-blue-600 text-white' : 'bg-white text-gray-400 border border-gray-200'}`}>{t}</button>
+            <button key={t} className={`text-[8px] font-semibold px-2 py-0.5 rounded-md ${i === 1 ? 'bg-[#2E3192] text-white' : 'bg-white text-gray-400 border border-gray-200'}`}>{t}</button>
           ))}
         </div>
       </div>
@@ -275,7 +276,7 @@ function MockupReportes() {
             <div key={z.zona} className="flex items-center gap-2 mb-2">
               <p className="text-[8px] text-gray-600 w-14 shrink-0">{z.zona}</p>
               <div className="flex-1 h-1.5 bg-gray-100 rounded-full">
-                <div className="h-1.5 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full" style={{ width: `${z.pct}%` }} />
+                <div className="h-1.5 bg-gradient-to-r from-[#2E3192]/60 to-[#2E3192] rounded-full" style={{ width: `${z.pct}%` }} />
               </div>
               <p className="text-[8px] font-semibold text-gray-700 w-9 text-right shrink-0">{z.monto}</p>
             </div>
@@ -340,15 +341,15 @@ function MockupRuta() {
           { nombre: 'Distribuidora Roma', dir: 'Italia 234', estado: 'visitado', monto: '$21.600', pedido: 'Pedido #486' },
           { nombre: 'Minimarket Sol', dir: 'Córdoba 567', estado: 'pendiente', monto: '—', pedido: 'Sin pedido aún' },
         ].map((c) => (
-          <div key={c.nombre} className={`bg-white rounded-xl border px-3 py-2 flex items-center gap-2.5 shadow-sm ${c.estado === 'en_curso' ? 'border-blue-400' : 'border-gray-100'}`}>
-            <div className={`w-2 h-2 rounded-full shrink-0 ${c.estado === 'visitado' ? 'bg-green-500' : c.estado === 'en_curso' ? 'bg-blue-500 ring-2 ring-blue-200' : 'bg-gray-200'}`} />
+          <div key={c.nombre} className={`bg-white rounded-xl border px-3 py-2 flex items-center gap-2.5 shadow-sm ${c.estado === 'en_curso' ? 'border-[#2E3192]/50' : 'border-gray-100'}`}>
+            <div className={`w-2 h-2 rounded-full shrink-0 ${c.estado === 'visitado' ? 'bg-green-500' : c.estado === 'en_curso' ? 'bg-[#2E3192] ring-2 ring-[#2E3192]/20' : 'bg-gray-200'}`} />
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-semibold text-gray-800 truncate">{c.nombre}</p>
               <p className="text-[8px] text-gray-400">{c.dir} · {c.pedido}</p>
             </div>
             <div className="text-right shrink-0">
               <p className="text-[9px] font-bold text-gray-700">{c.monto}</p>
-              <p className={`text-[8px] font-semibold ${c.estado === 'visitado' ? 'text-green-600' : c.estado === 'en_curso' ? 'text-blue-600' : 'text-gray-400'}`}>
+              <p className={`text-[8px] font-semibold ${c.estado === 'visitado' ? 'text-green-600' : c.estado === 'en_curso' ? 'text-[#2E3192]' : 'text-gray-400'}`}>
                 {c.estado === 'visitado' ? '✓ Listo' : c.estado === 'en_curso' ? '● En curso' : 'Pendiente'}
               </p>
             </div>
@@ -424,7 +425,7 @@ function Carrusel() {
             <button
               key={s.titulo}
               onClick={() => setActivo(i)}
-              className={`rounded-full transition-all duration-300 ${i === activo ? 'w-6 h-2 bg-blue-600' : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'}`}
+              className={`rounded-full transition-all duration-300 ${i === activo ? 'w-6 h-2 bg-zonify-blue' : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'}`}
             />
           ))}
         </div>
@@ -447,12 +448,12 @@ function PlanCard({ planKey }: { planKey: PlanKey }) {
   const meta = PLANES_META[planKey]
   const modulos = MODULOS_POR_PLAN[planKey]
   return (
-    <div className={`rounded-2xl border-2 p-5 flex flex-col gap-4 ${meta.es_popular ? 'border-blue-500 shadow-lg shadow-blue-100' : 'border-gray-200'}`}>
+    <div className={`rounded-2xl border-2 p-5 flex flex-col gap-4 ${meta.es_popular ? 'border-zonify-blue shadow-lg shadow-[#2E3192]/10' : 'border-gray-200'}`}>
       <div>
         {meta.es_popular && (
-          <span className="inline-block bg-blue-600 text-white text-xs font-semibold px-3 py-0.5 rounded-full mb-2">Recomendado</span>
+          <span className="inline-block bg-zonify-blue text-white text-xs font-semibold px-3 py-0.5 rounded-full mb-2">Recomendado</span>
         )}
-        <h3 className={`text-xl font-bold ${meta.es_popular ? 'text-blue-600' : 'text-gray-900'}`}>{meta.nombre}</h3>
+        <h3 className={`text-xl font-bold ${meta.es_popular ? 'text-zonify-blue' : 'text-gray-900'}`}>{meta.nombre}</h3>
         <p className="text-sm text-gray-500 mt-1">{meta.descripcion}</p>
       </div>
       <ul className="space-y-2 flex-1">
@@ -468,7 +469,7 @@ function PlanCard({ planKey }: { planKey: PlanKey }) {
           )
         })}
         <li className="flex items-center gap-2 text-sm">
-          <Check className="w-4 h-4 text-blue-500 shrink-0" />
+          <Check className="w-4 h-4 text-zonify-blue shrink-0" />
           <span className="text-gray-700 font-medium">Capacitación online incluida</span>
         </li>
         {planKey === 'enterprise' && ENTERPRISE_EXTRAS.map((f) => (
@@ -482,7 +483,7 @@ function PlanCard({ planKey }: { planKey: PlanKey }) {
         onClick={openCalendly}
         className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-colors ${
           meta.es_popular
-            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+            ? 'bg-zonify-blue hover:bg-[#252880] text-white'
             : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
         }`}
       >
@@ -511,9 +512,9 @@ function TablaPlanes() {
                 return (
                   <th key={p} className="text-center px-4 py-4">
                     <div className="flex flex-col items-center gap-1">
-                      <span className={`font-bold ${meta.es_popular ? 'text-blue-600' : 'text-gray-800'}`}>{meta.nombre}</span>
+                      <span className={`font-bold ${meta.es_popular ? 'text-zonify-blue' : 'text-gray-800'}`}>{meta.nombre}</span>
                       {meta.es_popular && (
-                        <span className="bg-blue-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">Recomendado</span>
+                        <span className="bg-zonify-blue text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">Recomendado</span>
                       )}
                     </div>
                   </th>
@@ -537,11 +538,11 @@ function TablaPlanes() {
                 })}
               </tr>
             ))}
-            <tr className="border-b border-gray-100 bg-blue-50/30">
+            <tr className="border-b border-gray-100 bg-zonify-bg/50">
               <td className="px-5 py-3 text-gray-700 font-medium">Capacitación online incluida</td>
               {PLANES.map((p) => (
                 <td key={p} className="text-center px-4 py-3">
-                  <Check className="w-4 h-4 text-blue-500 mx-auto" />
+                  <Check className="w-4 h-4 text-zonify-blue mx-auto" />
                 </td>
               ))}
             </tr>
@@ -561,7 +562,7 @@ function TablaPlanes() {
                     onClick={openCalendly}
                     className={`text-sm font-semibold px-4 py-2 rounded-xl transition-colors ${
                       PLANES_META[p].es_popular
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                        ? 'bg-zonify-blue hover:bg-[#252880] text-white'
                         : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                     }`}
                   >
@@ -600,10 +601,13 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="border-b border-gray-100 sticky top-0 bg-white/90 backdrop-blur z-10">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <span className="text-xl font-bold text-blue-600">Zonify</span>
+          <div className="flex items-center gap-2">
+            <ZonifyLogo size={32} />
+            <span className="text-xl font-bold text-zonify-blue">Zonify</span>
+          </div>
           <button
             onClick={openCalendly}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+            className="bg-zonify-blue hover:bg-[#252880] text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
           >
             Agendar llamada
           </button>
@@ -612,12 +616,12 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-4 pt-20 pb-16 text-center">
-        <span className="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full mb-6">
+        <span className="inline-block bg-zonify-bg text-zonify-blue text-xs font-semibold px-3 py-1 rounded-full mb-6 border border-[#2E3192]/20">
           Software para distribuidoras mayoristas
         </span>
         <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 tracking-tight">
           Tu distribuidora organizada,{' '}
-          <span className="text-blue-600">tu equipo sincronizado</span>
+          <span className="text-zonify-blue">tu equipo sincronizado</span>
         </h1>
         <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-4">
           Un sistema moderno, simple y fácil de usar que conecta a tus preventistas, depósito y choferes en tiempo real.
@@ -626,7 +630,7 @@ export default function LandingPage() {
         <p className="text-sm text-gray-400 mb-10">Diseñado para ser usado desde el primer día, sin capacitación técnica.</p>
         <button
           onClick={openCalendly}
-          className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-blue-200"
+          className="inline-block bg-zonify-blue hover:bg-[#252880] text-white font-semibold px-8 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-[#2E3192]/20"
         >
           Agendar una llamada gratuita
         </button>
@@ -699,15 +703,15 @@ export default function LandingPage() {
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: <Smartphone className="w-6 h-6 text-blue-600" />, titulo: 'Preventista en la calle', desc: 'Toma pedidos desde el celular con catálogo completo, precios por cliente y stock visible. Funciona sin señal y sincroniza solo.' },
-              { icon: <PackageCheck className="w-6 h-6 text-blue-600" />, titulo: 'Depósito sin sorpresas', desc: 'Ve los pedidos en tiempo real, prepara con lista digital y descuenta el stock automáticamente. Sin llamadas, sin confusiones.' },
-              { icon: <Truck className="w-6 h-6 text-blue-600" />, titulo: 'Chofer organizado', desc: 'Hoja de ruta digital con clientes ordenados, monto a cobrar por visita y estado de cada entrega actualizado al momento.' },
-              { icon: <BarChart3 className="w-6 h-6 text-blue-600" />, titulo: 'Admin con visibilidad total', desc: 'Dashboard con ventas, cobros, stock y rendimiento de cada preventista. Tomá decisiones con datos reales, no con estimaciones.' },
-              { icon: <ShieldCheck className="w-6 h-6 text-blue-600" />, titulo: 'Tecnología de primer nivel', desc: 'Construido con las mismas herramientas que usan las empresas más grandes del mundo. Rápido, seguro y siempre disponible.' },
-              { icon: <Wifi className="w-6 h-6 text-blue-600" />, titulo: 'Sin instalación ni hardware', desc: 'Se abre desde el navegador del celular o la PC. Sin aplicaciones que actualizar, sin servidores que mantener, sin IT.' },
+              { icon: <Smartphone className="w-6 h-6 text-zonify-blue" />, titulo: 'Preventista en la calle', desc: 'Toma pedidos desde el celular con catálogo completo, precios por cliente y stock visible. Funciona sin señal y sincroniza solo.' },
+              { icon: <PackageCheck className="w-6 h-6 text-zonify-blue" />, titulo: 'Depósito sin sorpresas', desc: 'Ve los pedidos en tiempo real, prepara con lista digital y descuenta el stock automáticamente. Sin llamadas, sin confusiones.' },
+              { icon: <Truck className="w-6 h-6 text-zonify-blue" />, titulo: 'Chofer organizado', desc: 'Hoja de ruta digital con clientes ordenados, monto a cobrar por visita y estado de cada entrega actualizado al momento.' },
+              { icon: <BarChart3 className="w-6 h-6 text-zonify-blue" />, titulo: 'Admin con visibilidad total', desc: 'Dashboard con ventas, cobros, stock y rendimiento de cada preventista. Tomá decisiones con datos reales, no con estimaciones.' },
+              { icon: <ShieldCheck className="w-6 h-6 text-zonify-blue" />, titulo: 'Tecnología de primer nivel', desc: 'Construido con las mismas herramientas que usan las empresas más grandes del mundo. Rápido, seguro y siempre disponible.' },
+              { icon: <Wifi className="w-6 h-6 text-zonify-blue" />, titulo: 'Sin instalación ni hardware', desc: 'Se abre desde el navegador del celular o la PC. Sin aplicaciones que actualizar, sin servidores que mantener, sin IT.' },
             ].map((item) => (
               <div key={item.titulo} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
-                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-4">
+                <div className="w-10 h-10 bg-zonify-bg rounded-xl flex items-center justify-center mb-4">
                   {item.icon}
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">{item.titulo}</h3>
@@ -725,7 +729,7 @@ export default function LandingPage() {
           <p className="text-gray-500 text-center mb-3">
             Todos los planes incluyen capacitación online y soporte para que tu equipo arranque sin problemas.
           </p>
-          <p className="text-center text-sm text-blue-600 font-medium mb-10">✓ Capacitación online incluida en todos los planes</p>
+          <p className="text-center text-sm text-zonify-blue font-medium mb-10">✓ Capacitación online incluida en todos los planes</p>
           <TablaPlanes />
         </div>
       </section>
@@ -752,15 +756,15 @@ export default function LandingPage() {
       </section>
 
       {/* CTA final */}
-      <section className="bg-blue-600 py-16 text-center text-white">
+      <section className="bg-zonify-blue py-16 text-center text-white">
         <h2 className="text-3xl font-bold mb-4">Ordená tu distribuidora esta semana</h2>
-        <p className="text-blue-200 mb-2 max-w-md mx-auto">
+        <p className="text-white/70 mb-2 max-w-md mx-auto">
           Agendá una llamada de 30 minutos. Te mostramos el sistema funcionando con datos reales de tu rubro.
         </p>
-        <p className="text-blue-300 text-sm mb-8">Sin compromisos. Sin presentaciones genéricas.</p>
+        <p className="text-white/50 text-sm mb-8">Sin compromisos. Sin presentaciones genéricas.</p>
         <button
           onClick={openCalendly}
-          className="inline-block bg-white text-blue-600 font-bold px-8 py-3.5 rounded-2xl hover:bg-blue-50 transition-colors"
+          className="inline-block bg-white text-zonify-blue font-bold px-8 py-3.5 rounded-2xl hover:bg-zonify-bg transition-colors"
         >
           Agendar llamada gratuita
         </button>
@@ -768,6 +772,10 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-gray-100 py-8 text-center text-xs text-gray-400">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <ZonifyLogo size={22} />
+          <span className="font-semibold text-zonify-dark text-sm">Zonify</span>
+        </div>
         <p>© {new Date().getFullYear()} Zonify · <a href={`mailto:${CONTACT}`} className="hover:text-gray-600">{CONTACT}</a></p>
       </footer>
     </div>

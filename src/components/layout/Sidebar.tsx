@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Avatar } from '@/components/ui/Avatar'
+import { ZonifyLogo } from '@/components/ui/ZonifyLogo'
 import { getNavForRole } from './navConfig'
 import { cn } from '@/lib/utils'
 
@@ -12,12 +13,10 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:flex w-64 shrink-0 flex-col h-screen sticky top-0 border-r border-[var(--color-border)] bg-[var(--color-surface)]">
       {/* Logo */}
-      <div className="px-6 py-5 flex items-center gap-2.5 border-b border-[var(--color-border)]">
-        <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
-          Z
-        </div>
+      <div className="px-5 py-4 flex items-center gap-2.5 border-b border-[var(--color-border)]">
+        <ZonifyLogo size={36} />
         <div>
-          <p className="text-sm font-semibold text-[var(--color-ink)]">Zonify</p>
+          <p className="text-sm font-semibold text-zonify-dark">Zonify</p>
           <p className="text-xs text-[var(--color-ink-muted)]">Preventas</p>
         </div>
       </div>

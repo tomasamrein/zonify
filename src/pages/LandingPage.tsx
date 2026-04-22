@@ -20,13 +20,13 @@ function openCalendly(e: React.MouseEvent) {
 }
 const ALL_MODULOS: Modulo[] = ['preventa', 'cobros', 'deposito', 'logistica', 'facturacion', 'stock', 'reportes']
 const MODULOS_LABELS: Record<Modulo, string> = {
-  preventa:    'Preventa y pedidos',
-  cobros:      'Cobros y rendición',
-  deposito:    'Depósito y preparación',
-  logistica:   'Logística y entregas',
+  preventa: 'Preventa y pedidos',
+  cobros: 'Cobros y rendición',
+  deposito: 'Depósito y preparación',
+  logistica: 'Logística y entregas',
   facturacion: 'Facturación / comprobantes',
-  stock:       'Gestión de stock',
-  reportes:    'Reportes de ventas',
+  stock: 'Gestión de stock',
+  reportes: 'Reportes de ventas',
 }
 
 // ── Mockups de pantallas ─────────────────────────────────────────────────────
@@ -483,11 +483,10 @@ function PlanCard({ planKey }: { planKey: PlanKey }) {
       </ul>
       <button
         onClick={openCalendly}
-        className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-          meta.es_popular
-            ? 'bg-zonify-blue hover:bg-[#252880] text-white'
-            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-        }`}
+        className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-colors ${meta.es_popular
+          ? 'bg-zonify-blue hover:bg-[#252880] text-white'
+          : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+          }`}
       >
         Consultar plan {meta.nombre}
       </button>
@@ -562,11 +561,10 @@ function TablaPlanes() {
                 <td key={p} className="text-center px-4 py-4">
                   <button
                     onClick={openCalendly}
-                    className={`text-sm font-semibold px-4 py-2 rounded-xl transition-colors ${
-                      PLANES_META[p].es_popular
-                        ? 'bg-zonify-blue hover:bg-[#252880] text-white'
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                    }`}
+                    className={`text-sm font-semibold px-4 py-2 rounded-xl transition-colors ${PLANES_META[p].es_popular
+                      ? 'bg-zonify-blue hover:bg-[#252880] text-white'
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      }`}
                   >
                     Consultar
                   </button>
@@ -637,15 +635,15 @@ export default function LandingPage() {
         <span className="inline-block bg-zonify-bg text-zonify-blue text-xs font-semibold px-3 py-1 rounded-full mb-6 border border-[#2E3192]/20">
           Software para distribuidoras mayoristas
         </span>
-        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 tracking-tight">
+        <h1 className="text-4xl md:text-6xl font-black leading-tight mb-8 tracking-tight text-gray-950">
           Tu distribuidora organizada,{' '}
           <span className="text-zonify-blue">tu equipo sincronizado</span>
         </h1>
-        <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-4">
+        <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-6">
           Un sistema moderno, simple y fácil de usar que conecta a tus preventistas, depósito y choferes en tiempo real.
           Sin papel, sin llamadas innecesarias, sin perder ventas por falta de stock.
         </p>
-        <p className="text-sm text-gray-400 mb-10">Diseñado para ser usado desde el primer día, sin capacitación técnica.</p>
+        <p className="text-sm text-gray-400 mb-10">Diseñado para ser usado desde el primer día, sin complicaciones.</p>
         <button
           onClick={openCalendly}
           className="inline-block bg-zonify-blue hover:bg-[#252880] text-white font-semibold px-8 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-[#2E3192]/20"
@@ -655,7 +653,7 @@ export default function LandingPage() {
 
         {/* Tech badges */}
         <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
-          {['Funciona offline', 'Instalable en celular', 'Tiempo real', 'Datos 100% seguros', 'Sin instalación'].map((b) => (
+          {['Funciona offline', 'Desde cualquier dispositivo', 'Tiempo real', 'Datos 100% seguros', 'Sistema en la nube'].map((b) => (
             <span key={b} className="bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full">{b}</span>
           ))}
         </div>
@@ -705,8 +703,8 @@ export default function LandingPage() {
 
       {/* Carrusel */}
       <section className="py-20">
-        <div className="text-center mb-10 px-4">
-          <h2 className="text-3xl font-bold mb-3">Mirá cómo se ve en funcionamiento</h2>
+        <div className="text-center mb-12 px-4">
+          <h2 className="text-3xl font-black mb-5 text-gray-950">Mirá cómo se ve en funcionamiento</h2>
           <p className="text-gray-500 max-w-xl mx-auto">Interfaz moderna y simple. Tu equipo lo aprende en minutos.</p>
         </div>
         <Carrusel />
@@ -715,18 +713,18 @@ export default function LandingPage() {
       {/* Features = soluciones */}
       <section className="bg-gray-50 py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-4">Un sistema, todos los roles conectados</h2>
+          <h2 className="text-3xl font-black text-center mb-6 text-gray-950">Un sistema, todos los roles conectados</h2>
           <p className="text-gray-500 text-center max-w-xl mx-auto mb-12">
             Cada persona en tu equipo trabaja con la información que necesita, en el momento que la necesita.
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: <Smartphone className="w-6 h-6 text-zonify-blue" />, titulo: 'Preventista en la calle', desc: 'Toma pedidos desde el celular con catálogo completo, precios por cliente y stock visible. Funciona sin señal y sincroniza solo.' },
-              { icon: <PackageCheck className="w-6 h-6 text-zonify-blue" />, titulo: 'Depósito sin sorpresas', desc: 'Ve los pedidos en tiempo real, prepara con lista digital y descuenta el stock automáticamente. Sin llamadas, sin confusiones.' },
-              { icon: <Truck className="w-6 h-6 text-zonify-blue" />, titulo: 'Chofer organizado', desc: 'Hoja de ruta digital con clientes ordenados, monto a cobrar por visita y estado de cada entrega actualizado al momento.' },
-              { icon: <BarChart3 className="w-6 h-6 text-zonify-blue" />, titulo: 'Admin con visibilidad total', desc: 'Dashboard con ventas, cobros, stock y rendimiento de cada preventista. Tomá decisiones con datos reales, no con estimaciones.' },
-              { icon: <ShieldCheck className="w-6 h-6 text-zonify-blue" />, titulo: 'Tecnología de primer nivel', desc: 'Construido con las mismas herramientas que usan las empresas más grandes del mundo. Rápido, seguro y siempre disponible.' },
-              { icon: <Wifi className="w-6 h-6 text-zonify-blue" />, titulo: 'Sin instalación ni hardware', desc: 'Se abre desde el navegador del celular o la PC. Sin aplicaciones que actualizar, sin servidores que mantener, sin IT.' },
+              { icon: <Smartphone className="w-6 h-6 text-zonify-blue" />, titulo: 'Vendé en cualquier lugar', desc: 'Tomá pedidos sin señal y sincronizá al recuperar conexión.' },
+              { icon: <PackageCheck className="w-6 h-6 text-zonify-blue" />, titulo: 'Sincronizá tu stock', desc: 'Prepará pedidos con listas digitales y evitá errores de carga.' },
+              { icon: <Truck className="w-6 h-6 text-zonify-blue" />, titulo: 'Entregá sin demoras', desc: 'Hojas de ruta digitales para que tus choferes cobren y entreguen rápido.' },
+              { icon: <BarChart3 className="w-6 h-6 text-zonify-blue" />, titulo: 'Analizá tus números', desc: 'Ventas, cobros y stock en un solo panel con datos reales.' },
+              { icon: <ShieldCheck className="w-6 h-6 text-zonify-blue" />, titulo: 'Tecnología Global', desc: 'Construido con las mismas herramientas que usan las empresas más grandes del mundo. Rápido, seguro y siempre disponible.' },
+              { icon: <Wifi className="w-6 h-6 text-zonify-blue" />, titulo: 'Cero complicaciones', desc: 'Sin servidores ni instalaciones. Entrás desde el navegador y listo.' },
             ].map((item) => (
               <div key={item.titulo} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
                 <div className="w-10 h-10 bg-zonify-bg rounded-xl flex items-center justify-center mb-4">
@@ -743,7 +741,7 @@ export default function LandingPage() {
       {/* Planes */}
       <section className="py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-3">Planes para cada etapa</h2>
+          <h2 className="text-3xl font-black text-center mb-6 text-gray-950">Planes para cada etapa</h2>
           <p className="text-gray-500 text-center mb-3">
             Todos los planes incluyen capacitación online y soporte para que tu equipo arranque sin problemas.
           </p>
@@ -755,7 +753,7 @@ export default function LandingPage() {
       {/* FAQ */}
       <section className="bg-gray-50 py-20">
         <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-10">Preguntas frecuentes</h2>
+          <h2 className="text-3xl font-black text-center mb-10 text-gray-950">Preguntas frecuentes</h2>
           <div className="space-y-6">
             {[
               { q: '¿Es difícil de usar?', a: 'No. Está diseñado para ser simple desde el primer día. Un preventista sin experiencia en tecnología puede aprender a tomar pedidos en menos de 30 minutos. Además, todos los planes incluyen capacitación online.' },
@@ -775,7 +773,7 @@ export default function LandingPage() {
 
       {/* CTA final */}
       <section className="bg-zonify-blue py-16 text-center text-white">
-        <h2 className="text-3xl font-bold mb-4">Ordená tu distribuidora esta semana</h2>
+        <h2 className="text-3xl font-black mb-6">Ordená tu distribuidora esta semana</h2>
         <p className="text-white/70 mb-2 max-w-md mx-auto">
           Agendá una llamada de 30 minutos. Te mostramos el sistema funcionando con datos reales de tu rubro.
         </p>

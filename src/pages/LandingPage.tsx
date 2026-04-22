@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSEO } from '@/hooks/useSEO'
 import { Check, X, Truck, PackageCheck, BarChart3, Wifi, ShieldCheck, Smartphone, ChevronLeft, ChevronRight, Clock, AlertTriangle, MessageSquareX, FolderX } from 'lucide-react'
 import { PLANES_META, MODULOS_POR_PLAN, type PlanKey, type Modulo } from '@/lib/planesConfig'
 import { ZonifyLogo } from '@/components/ui/ZonifyLogo'
@@ -583,6 +584,12 @@ function TablaPlanes() {
 
 export default function LandingPage() {
   const navigate = useNavigate()
+  useSEO({
+    title: 'Zonify — Software para distribuidoras mayoristas',
+    description: 'Plataforma SaaS offline-first para preventa, stock y logística. Conecta preventistas, depósito y choferes en tiempo real. Funciona sin internet.',
+    image: 'https://zonify.com.ar/og-image.png',
+    url: 'https://zonify.com.ar',
+  })
 
   useEffect(() => {
     if (!document.querySelector('link[href*="calendly"]')) {

@@ -51,13 +51,13 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registro" element={<RegistroPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            <Route path="/"                      element={<DashboardPage />} />
+            <Route path="/dashboard"             element={<DashboardPage />} />
             <Route path="/pedidos"               element={<MisPedidosPage />} />
             <Route path="/venta"                 element={<NuevaVentaPage />} />
             <Route path="/ruta"                  element={<MiRutaPage />} />
@@ -93,7 +93,7 @@ export default function App() {
           </Route>
         </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
   )

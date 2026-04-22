@@ -352,7 +352,7 @@ export default function RegistroPage() {
                   <strong>{form.nombre}</strong> está lista para usar.
                 </p>
               </div>
-              <Button size="lg" className="w-full" onClick={() => navigate('/')}>
+              <Button size="lg" className="w-full" onClick={() => navigate('/dashboard')}>
                 Ir al Dashboard
               </Button>
             </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Check, X, Truck, PackageCheck, BarChart3, Wifi, ShieldCheck, Smartphone, ChevronLeft, ChevronRight, Clock, AlertTriangle, MessageSquareX, FolderX } from 'lucide-react'
 import { PLANES_META, MODULOS_POR_PLAN, type PlanKey, type Modulo } from '@/lib/planesConfig'
 import { ZonifyLogo } from '@/components/ui/ZonifyLogo'
@@ -581,6 +582,8 @@ function TablaPlanes() {
 // ── Página ────────────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
+  const navigate = useNavigate()
+
   useEffect(() => {
     if (!document.querySelector('link[href*="calendly"]')) {
       const link = document.createElement('link')
@@ -605,12 +608,20 @@ export default function LandingPage() {
             <ZonifyLogo size={32} />
             <span className="text-xl font-bold text-zonify-blue">Zonify</span>
           </div>
-          <button
-            onClick={openCalendly}
-            className="bg-zonify-blue hover:bg-[#252880] text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
-          >
-            Agendar llamada
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate('/login')}
+              className="text-sm font-medium text-gray-600 hover:text-zonify-blue px-3 py-2 rounded-xl transition-colors"
+            >
+              Iniciar sesión
+            </button>
+            <button
+              onClick={openCalendly}
+              className="bg-zonify-blue hover:bg-[#252880] text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+            >
+              Agendar llamada
+            </button>
+          </div>
         </div>
       </nav>
 

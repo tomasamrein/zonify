@@ -31,7 +31,7 @@ export interface NavItem {
 }
 
 const ADMIN_NAV: NavItem[] = [
-  { to: '/',                   label: 'Dashboard',    icon: LayoutDashboard },
+  { to: '/dashboard',          label: 'Dashboard',    icon: LayoutDashboard },
   { to: '/admin/clientes',     label: 'Clientes',     icon: Users,          modulo: 'preventa' },
   { to: '/admin/productos',    label: 'Productos',    icon: Package,        modulo: 'stock' },
   { to: '/admin/precios',      label: 'Precios',      icon: DollarSign,     modulo: 'stock' },
@@ -50,7 +50,7 @@ const ADMIN_NAV: NavItem[] = [
 ]
 
 const PREVENTISTA_NAV: NavItem[] = [
-  { to: '/',          label: 'Inicio',       icon: LayoutDashboard },
+  { to: '/dashboard', label: 'Inicio',       icon: LayoutDashboard },
   { to: '/ruta',      label: 'Mi ruta',      icon: Route,          modulo: 'preventa' },
   { to: '/venta',     label: 'Nueva venta',  icon: ShoppingCart,   modulo: 'preventa', primary: true },
   { to: '/cobros',    label: 'Cobros',       icon: CreditCard,     modulo: 'cobros' },
@@ -59,7 +59,7 @@ const PREVENTISTA_NAV: NavItem[] = [
 ]
 
 const DEPOSITO_NAV: NavItem[] = [
-  { to: '/',                     label: 'Dashboard',   icon: LayoutDashboard },
+  { to: '/dashboard',            label: 'Dashboard',   icon: LayoutDashboard },
   { to: '/deposito/preparacion', label: 'Preparación', icon: Package,  modulo: 'deposito', primary: true },
   { to: '/admin/productos',      label: 'Stock',       icon: Warehouse, modulo: 'stock' },
 ]

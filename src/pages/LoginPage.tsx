@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [modoEmail, setModoEmail] = useState(false)
   const [email, setEmail]         = useState('')
 
-  if (user) return <Navigate to={modoEmail ? '/superadmin' : '/'} replace />
+  if (user) return <Navigate to={modoEmail ? '/superadmin' : '/dashboard'} replace />
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

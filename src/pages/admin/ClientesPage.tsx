@@ -101,8 +101,7 @@ export default function ClientesPage() {
           .from('clientes')
           .select('*, zonas(nombre), perfiles(nombre_completo), listas_precios(nombre)')
           .eq('empresa_id', empresaId)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .is('deleted_at' as any, null)
+          .eq('activo', true)
           .order('razon_social'),
         supabase.from('zonas').select('id, nombre').eq('empresa_id', empresaId).eq('activo', true).order('nombre'),
         supabase

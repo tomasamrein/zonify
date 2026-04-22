@@ -64,8 +64,7 @@ export default function ProductosPage() {
             .from('productos')
             .select('*, categorias(nombre), unidades_medida(codigo)')
             .eq('empresa_id', empresaId)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .is('deleted_at' as any, null)
+            .eq('activo', true)
             .order('nombre'),
           supabase.from('categorias').select('*').eq('empresa_id', empresaId).eq('activo', true).order('nombre'),
           supabase.from('unidades_medida').select('*').eq('activo', true).order('nombre'),

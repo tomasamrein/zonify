@@ -4,7 +4,7 @@ import { PLANES_META, MODULOS_POR_PLAN, type PlanKey, type Modulo } from '@/lib/
 import { ZonifyLogo } from '@/components/ui/ZonifyLogo'
 
 const CONTACT = 'contacto@zonify.com.ar'
-const CALENDLY_URL = 'https://calendly.com/zonify/llamada'
+const CALENDLY_URL = 'https://calendly.com/tomasamrein72/30min'
 const PLANES: PlanKey[] = ['starter', 'pro', 'enterprise']
 
 function openCalendly(e: React.MouseEvent) {
